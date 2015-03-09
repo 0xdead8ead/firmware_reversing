@@ -1,0 +1,13 @@
+Package: libid3tag
+Version: 0.15.1b-1
+Depends: 
+Provides: 
+Source: package/libid3tag
+Section: libs
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 107940
+Description:  libid3tag

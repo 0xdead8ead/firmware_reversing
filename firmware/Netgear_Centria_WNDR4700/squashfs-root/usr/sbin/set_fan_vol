@@ -1,0 +1,54 @@
+#!/bin/sh
+
+CONFIG=/bin/config
+fan_level=`$CONFIG get fan_level`
+
+# Set the Configuration Register bit-5 to "1" to control the voltage by the Duty Cycle Register.
+i2cset -y 0 0x1b 0x04 0x2a
+
+auto_fan()
+{
+	while [ 1 ]; do
+        	let latest_temperatue=`i2cget -y 0 0x4d 0x00`
+        	if [ "$latest_temperatue" -lt "65" ]; then
+                	i2cset -y 0 0x1b 0x06 0x00
+        	elif [ "$latest_temperatue" -ge "65" -a "$latest_temperatue" -lt "68" ]; then
+                	i2cset -y 0 0x1b 0x06 0x03
+		elif [ "$latest_temperatue" -ge "68" -a "$latest_temperatue" -lt "72" ]; then
+			i2cset -y 0 0x1b 0x06 0x07
+		elif [ "$latest_temperatue" -ge "72" -a "$latest_temperatue" -lt "76" ]; then
+			i2cset -y 0 0x1b 0x06 0x0b
+		elif [ "$latest_temperatue" -ge "76" ]; then
+			i2cset -y 0 0x1b 0x06 0x0f
+        	fi
+        	sleep 67
+	done
+
+}
+
+case "$fan_level" in
+	0)
+		auto_fan
+	;;
+	1)
+		#less than 65
+		i2cset -y 0 0x1b 0x06 0x00
+	;;
+	2)
+		#larger than 65 and less than 70
+		i2cset -y 0 0x1b 0x06 0x03
+	;;
+	3)
+		#larger than 70 and less than 75
+		i2cset -y 0 0x1b 0x06 0x07
+	;;
+	4)
+		#larger than 75 and less than 80
+		i2cset -y 0 0x1b 0x06 0x0b
+	;;
+	5)
+		#larger than 80
+		i2cset -y 0 0x1b 0x06 0x0f
+	;;
+esac
+		

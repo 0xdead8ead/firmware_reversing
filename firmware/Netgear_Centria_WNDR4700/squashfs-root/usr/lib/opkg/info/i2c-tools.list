@@ -1,0 +1,5 @@
+/usr/sbin/i2cget
+/usr/sbin/i2cdump
+/usr/sbin/i2cdetect
+/usr/sbin/set_fan_vol
+/usr/sbin/i2cset

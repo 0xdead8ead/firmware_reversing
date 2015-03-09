@@ -1,0 +1,13 @@
+Package: dnippp-mod-pptp
+Version: 2.4.3-8
+Depends: dnippp, kmod-pptp
+Provides: 
+Source: package/dnippp
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 39280
+Description:  This package contains a PPTP (PPP over GRE/IPv4) plugin for ppp.

@@ -1,0 +1,13 @@
+Package: net-dump
+Version: 1
+Depends: 
+Provides: 
+Source: package/net-dump
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 23352
+Description:  It is used for NTGR's Router Debug mode.

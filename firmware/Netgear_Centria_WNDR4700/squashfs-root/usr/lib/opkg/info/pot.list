@@ -1,0 +1,5 @@
+/etc/init.d/pot
+/usr/sbin/potd
+/usr/sbin/stamac
+/usr/sbin/ntpst
+/usr/sbin/potval

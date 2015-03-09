@@ -1,0 +1,13 @@
+Package: ip
+Version: 2.6.35-2
+Depends: 
+Provides: 
+Source: package/iproute2
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 213115
+Description:  Routing control utility

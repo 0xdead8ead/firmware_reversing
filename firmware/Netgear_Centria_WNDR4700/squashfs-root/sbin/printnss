@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cat <<EOF >/tmp/nsswitch.conf
+hosts:          files dns
+EOF

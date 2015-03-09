@@ -1,0 +1,13 @@
+Package: curl
+Version: 7.20.0-1
+Depends: libopenssl
+Provides: 
+Source: package/curl
+Section: libs
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 4663184
+Description:  multiprotocol file transfer library

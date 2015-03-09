@@ -1,0 +1,13 @@
+Package: dni-ripd
+Version: 0.01-1
+Depends: 
+Provides: 
+Source: package/dni-ripd
+Section: dni
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 36452
+Description:  ripd

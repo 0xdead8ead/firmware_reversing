@@ -1,0 +1,3 @@
+/lib/modules/2.6.32.11-wndr4700/nf_conntrack_dnisip.ko
+/lib/modules/2.6.32.11-wndr4700/nf_nat_dnisip.ko
+/etc/modules.d/46-dnisip

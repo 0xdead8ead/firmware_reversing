@@ -1,0 +1,13 @@
+Package: atheros-aquila-wpa2
+Version: 0.5.9-1
+Depends: 
+Provides: 
+Source: package/atheros-aquila-wpa2
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 405549
+Description:  Atheros WPA2 package (hostapd + library)

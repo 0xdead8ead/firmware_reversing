@@ -1,0 +1,13 @@
+Package: kmod-ipv6-cone
+Version: 2.6.32-1
+Depends: kernel (=2.6.32-1)
+Provides: 
+Source: package/kmod-ipv6-cone
+Section: kernel
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 33162
+Description:  IPv6 CONE linux kernel module for 2.6.32

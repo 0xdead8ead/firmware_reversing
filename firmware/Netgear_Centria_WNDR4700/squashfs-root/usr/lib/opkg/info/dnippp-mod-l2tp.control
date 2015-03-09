@@ -1,0 +1,13 @@
+Package: dnippp-mod-l2tp
+Version: 2.4.3-8
+Depends: dnippp, kmod-l2tp
+Provides: 
+Source: package/dnippp
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 48662
+Description:  This package contains a L2TP (PPP over L2TP) plugin for ppp.

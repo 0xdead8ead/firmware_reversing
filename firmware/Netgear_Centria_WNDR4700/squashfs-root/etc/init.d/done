@@ -1,0 +1,17 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006 OpenWrt.org
+
+START=99
+boot() {
+	# Set the FAN2 RPM threshold to 0
+	i2cset -y 0 0x1b 0x03 0x00
+	# Clear FAN FAULT
+	i2cset -y 0 0x1b 0x04 0xaa
+	# Set to Normal Operation Mode
+	i2cset -y 0 0x1b 0x04 0x2a
+
+	/bin/config set wps_client=""
+	/www/cgi-bin/firewall_function.sh blk_sched restart > /dev/console
+	/usr/sbin/check_smart_error.sh &
+	touch /tmp/bootdone
+}

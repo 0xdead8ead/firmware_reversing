@@ -1,0 +1,13 @@
+Package: kmod-wndr4700-madwifi
+Version: 2.6.32+-wndr4700-1
+Depends: kernel (=2.6.32-1)
+Provides: 
+Source: package/wndr4700-madwifi
+Section: kernel
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 2107017
+Description:  Driver for Atheros wireless chipsets

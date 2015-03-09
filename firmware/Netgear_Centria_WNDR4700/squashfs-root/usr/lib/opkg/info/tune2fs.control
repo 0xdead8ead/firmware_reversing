@@ -1,0 +1,13 @@
+Package: tune2fs
+Version: 1.42-2
+Depends: e2fsprogs
+Provides: 
+Source: package/e2fsprogs
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 68608
+Description:  Ext2 Filesystem tune utility

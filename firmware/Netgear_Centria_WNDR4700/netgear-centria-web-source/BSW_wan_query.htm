@@ -1,0 +1,20 @@
+<head>
+<title>query</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Pragma" content="no-cache">
+<script type="text/javascript">
+
+  var ping_res="<% check_ping_result("/tmp/ping_result")  %>"
+  if(parent.charcount < parent.maxchars )
+  {
+      if(ping_res=="success" && parseInt(parent.charcount) > 5)
+		  parent.ping_ok=1;
+	  else if(ping_res=="failed")
+      	  setTimeout("location.replace(location.href);", 1000);  
+  }	  
+  
+</script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,8 @@
+/sbin/app_mount
+/sbin/umount_unapproved
+/sbin/hotplug2
+/etc/init.d/hotplug2
+/etc/hotplug2.rules
+/sbin/hotplug2.umount
+/sbin/hotplug2.mount
+/sbin/hotplug2.testbusy

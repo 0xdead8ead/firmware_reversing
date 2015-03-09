@@ -1,0 +1,266 @@
+SoHoplessly Broken
+=====================
+
+Author: Chase Schultz (f47h3r)
+
+Site for Challenge:  http://sohopelesslybroken.com/track0.php
+
+Sponsors:	https://securityevaluators.com/  &&  EFF
+
+Routers in Scope:
+
+	Linksys EA6500 [Ver.1.1.40 (build 160989)]
+	ASUS RT-AC66U (HW Ver. A2) [Version 3.0.0.4.374.5517]
+	TRENDnet TEW-812DRU (H/W: v1.0R) [Version 2.0.6.0]
+	Netgear Centria WNDR4700 [Version V1.0.0.52]
+	Netgear WNR3500U/WNR3500L [Version V1.2.2.48_35.0.55]
+	TP-Link TL-WR1043ND (Ver. 1.10) [Version V1_140319]
+	D-Link DIR-865L (HW Ver. A1) [Version 1.05]
+	Belkin N900 DB (Model: F9K1104v1) [Version 1.00.23]
+
+TODO:
+
+	1) Download Relevant Firmware Binary Versions - Done
+	2) Extract Filesystem with Binwalk - Done
+	3) Examine File System (Find Source Code, Default Passwords, etc) 
+	4) Find Source Code & Analyze with Checkmarx
+	5) Find Vulns(?)
+	6) Write Exploits
+
+	7) Win!
+
+-------
+
+Firmware Downloads
+-------------------
+
+	Linksys EA6500 [Ver.1.1.40 (build 160989)]
+
+		Support Site:	http://support.linksys.com/en-us/support/routers/EA6500/download
+		DL Link: 		http://downloads.linksys.com/downloads/firmware/1224699084814/FW_EA6500v2_1.1.40.160989_prod.img
+
+	ASUS RT-AC66U (HW Ver. A2) [Version 3.0.0.4.374.5517]
+
+		Support Site:	http://support.asus.com/download.aspx?SLanguage=en&p=11&m=RT-AC66U&hashedid=LzShv8ma7TrQB4eO
+		DL Link:		http://dlcdnet.asus.com/pub/ASUS/wireless/RT-AC66U/FW_RT_AC66U_30043745517.zip
+
+	TRENDnet TEW-812DRU (H/W: v1.0R) [Version 2.0.6.0]
+
+		Suport Site:	http://www.trendnet.com/support/supportdetail.asp?prod=105_TEW-812DRU
+		DL Link:		http://downloads.trendnet.com/tew-812dru_v2/firmware/tew-812druv2_(fw2.0.6.0).zip
+
+	Netgear Centria WNDR4700 [Version V1.0.0.52]
+
+		Support Site:	http://support.netgear.com/product/CENTRIA%2B$28WNDR4700$2f4720$29
+		DL Link:		http://www.downloads.netgear.com/files/GDC/WNDR4700/WNDR4700-V1.0.0.52.zip
+
+	Netgear WNR3500U/WNR3500L [Version V1.2.2.48_35.0.55]  -  (EOL)?
+
+		Support Site:	http://support.netgear.com/product/WNR3500Lv1
+		DL Link:		http://www.downloads.netgear.com/files/GDC/WNR3500LV1/WNR3500L_V1.2.2.48_35.0.55NA.zip
+
+	TP-Link TL-WR1043ND (Ver. 1.10) [Version V1_140319]
+
+		Support Site:	http://www.tp-link.com/en/support/download/?model=TL-WR1043ND&version=V1
+		DL Link:		http://www.tp-link.com/resources/software/TL-WR1043ND_V1_140319.zip
+
+	TP-Link TL-WR1043ND (Ver. 2.1) [Version V2_140613]
+
+		Support Site:	http://www.tp-link.com/en/support/download/?model=TL-WR1043ND&version=V2
+		DL Link:		http://www.tp-link.com/resources/software/TL-WR1043ND_V2_140613.zip
+
+	D-Link DIR-865L (HW Ver. A1) [Version 1.05]
+
+		Support Site:	http://www.dlink.com/uk/en/support/product/dir-865l-cloud-router-5700
+		DL Link:		ftp://ftp.dlink.eu/Products/dir/dir-865l/driver_software/DIR-865L_fw_revA_105b07_all_en_20130718.zip
+
+	Belkin N900 DB (Model: F9K1104v1) [Version 1.00.23]
+
+		Support Site:	http://www.belkin.com/us/support-article?articleNum=4879
+		DL Link:		http://nextnet.belkin.com/update/files/F9K1104/v1/WW/F9K1104_WW_1.0.23.bin
+
+
+------
+
+
+
+Pulled Web Source for:
+
+ASUS_RT-AC66U
+D-Link_DIR-865L
+Linksys_EA6500
+Netgear_Centria_WNDR4700
+
+
+Specific Notes:
+
+	TP-Link TL-WR1043ND:
+
+		Cracked Open the httpd daemon in IDA Pro...
+
+		Noteable Functions:
+
+			file_md5_des  --  This seems to be the configuration decryption for the OEM settings located:
+
+				/web/oem/model.conf
+
+			Encryption Key Maybe?
+
+				.data:100060A0 cDesKey:        .dword 0x478DA50BF9E3D2CF
+
+
+			CONTENTS OF THE OEM model.conf FILE:
+
+
+				MEMORY:76FF31D8 aProductIdAndProductVersionProduct_id0x10430002Pro:.ascii "/* Product id and product version */\n"
+				MEMORY:76FF31D8 .ascii "PRODUCT_ID = 0x10430002\n"
+				MEMORY:76FF31D8 .ascii "PRODUCT_VERSION\t= 0x00000001\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "COMPANY_NAME = TP-LINK TECHNOLOGIES CO., LTD.\n"
+				MEMORY:76FF31D8 .ascii "HARDWARE_VERSION = WR1043 v2\n"
+				MEMORY:76FF31D8 .ascii "ROUTER_SOFTWARE_VER = 0x1\n"
+				MEMORY:76FF31D8 .ascii "HTTP_BASIC_REALM_WEB = TP-LINK Wireless N Gigabit Router WR10"
+				MEMORY:76FF31D8 .ascii "43ND\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "/* Device Information provided by UPnP \n"
+				MEMORY:76FF31D8 .ascii " * @device_name: Device Name (Bual Band 29 byte, or 32 byte)\n"
+				MEMORY:76FF31D8 .ascii " * @manufacturer: Manufacturer (0..64 byte)\n"
+				MEMORY:76FF31D8 .ascii " * @model_name: Model Name (0..32 byte)\n"
+				MEMORY:76FF31D8 .ascii " * @model_number: Model Number (0..32 byte)\n"
+				MEMORY:76FF31D8 .ascii " * @serial_number: Serial Number (0..32 byte)\n"
+				MEMORY:76FF31D8 .ascii " */\n"
+				MEMORY:76FF31D8 .ascii "DEV_MANUFACTURER = TP-LINK\n"
+				MEMORY:76FF31D8 .ascii "DEV_MODEL_NAME = TL-WR1043\n"
+				MEMORY:76FF31D8 .ascii "DEV_MODOL_VER = 2.0\n"
+				MEMORY:76FF31D8 .ascii "DEV_NAME = Wireless Router TL-WR1043\n"
+				MEMORY:76FF31D8 .ascii "DEV_MANUFACTURER_URL = http://www.tp-link.com\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "LANGUAGE = EN\n"
+				MEMORY:76FF31D8 .ascii "WAN_STATIC_IP_IF_NAME = eth0.2\n"
+				MEMORY:76FF31D8 .ascii "LAN_FACT_IF_NAME = eth0.1\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "/* wireless parameter */\n"
+				MEMORY:76FF31D8 .ascii "WIRELESS_SSID_PREFIX = TP-LINK\n"
+				MEMORY:76FF31D8 .ascii "WIRELESS_SHOW_REGION = 1\n"
+				MEMORY:76FF31D8 .ascii "/* usa */\n"
+				MEMORY:76FF31D8 .ascii "WIRELESS_DEFAULT_REGION = 101\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "/* disable 5G */\n"
+				MEMORY:76FF31D8 .ascii "WIRELESS_ENABLE_5G = 0\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "/* Features */\n"
+				MEMORY:76FF31D8 .ascii "INCLUDE_DDNS = 1\n"
+				MEMORY:76FF31D8 .ascii "INCLUDE_DYN_DDNS = 1\n"
+				MEMORY:76FF31D8 .ascii "INCLUDE_NOIP_DDNS = 1\n"
+				MEMORY:76FF31D8 .ascii "INCLUDE_CMX_DDNS = 1\n"
+				MEMORY:76FF31D8 .ascii "INCLUDE_NAS = 1\n"
+				MEMORY:76FF31D8 .ascii "INCLUDE_NAT = 1\n"
+				MEMORY:76FF31D8 .ascii "INCLUDE_USBIP = 1\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "/* 0: single usb port; 1: two usb port with usb hub 2: two us"
+				MEMORY:76FF31D8 .ascii "b host port */\n"
+				MEMORY:76FF31D8 .ascii "USB_TYPE = 0\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "/* use vlan dev to identify lan/wan */\n"
+				MEMORY:76FF31D8 .ascii "INCLUDE_VLAN_DEV_CONFIG = 1\n"
+				MEMORY:76FF31D8 .ascii "/* Vlan tag mode\n"
+				MEMORY:76FF31D8 .ascii " * 1 RU Vlan\n"
+				MEMORY:76FF31D8 .ascii " * 2 Malaysia Vlan\n"
+				MEMORY:76FF31D8 .ascii " * 3 TW Vlan\n"
+				MEMORY:76FF31D8 .ascii " * 4 Singapore Vlan\n"
+				MEMORY:76FF31D8 .ascii " */\n"
+				MEMORY:76FF31D8 .ascii "INCLUDE_LAN_MODE_VLANTAG = 0\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "/* mux the Rst&Qss Button */\n"
+				MEMORY:76FF31D8 .ascii "MULTI_USE_RESET_BUTTON = 1\n"
+				MEMORY:76FF31D8 .ascii "INCLUDE_WIFI_RADIO_BUTTON = 1\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "/* include domain name login */\n"
+				MEMORY:76FF31D8 .ascii "INCLUDE_DOMAIN_NAME_LOGIN = 1;\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "/* include domain name login */\n"
+				MEMORY:76FF31D8 .ascii "INCLUDE_SPEED_BOOST = 1;\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "/* system tools */\n"
+				MEMORY:76FF31D8 .ascii "SYS_UPGRADE_TIME = 45\n"
+				MEMORY:76FF31D8 .ascii "SYS_REBOOT_TIME = 45\n"
+				MEMORY:76FF31D8 .ascii "DEFAULT_TIMEZONE = 480\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "/* switch speed in kbps */\n"
+				MEMORY:76FF31D8 .ascii "SWITCH_MAX_SPEED = 1000000\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "HTML_CHARSET = utf-8\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "SYS_SOFTWARE_REVISION = 0x55aa0311\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "/* UC version, if need change default uc, please plus 1 */\n"
+				MEMORY:76FF31D8 .ascii "SYS_USRCFG_VERSION = 0x0002\n"
+				MEMORY:76FF31D8 .ascii "SYS_SOFTWARE_REVISION_MINOR = 0x26\n"
+				MEMORY:76FF31D8 .ascii "\n"
+				MEMORY:76FF31D8 .ascii "BUILD_TIME = 55867\n"
+				MEMORY:76FF31D8 .ascii "BUILD_DATE = 06/13/14\n"<0>
+
+
+
+		Crash:
+
+			I was able to crash the Webserver with the following Request:
+
+				GET /userRpm/AccessCtrlAccessTargetsRpm.htm?Modify=075331375%20or%208790%3d8790&Page=1 HTTP/1.1
+				Host: 192.168.0.1
+				User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:30.0) Gecko/20100101 Firefox/30.0
+				Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+				Accept-Language: en-US,en;q=0.5
+				Accept-Encoding: gzip, deflate
+				Referer: http://192.168.0.1/userRpm/AccessCtrlAccessTargetsRpm.htm?target_type=1&targets_lists_name=%3Bping+192.168.0.100&dst_ip_start=192.168.0.150&dst_ip_end=192.168.0.200&dst_port_start=1337&dst_port_end=1337&proto=0&Commonport=0&url_0=&url_1=&url_2=&url_3=&Changed=0&SelIndex=0&fromAdd=0&Page=1&Save=Save
+				Authorization: Basic YWRtaW46YWRtaW4=
+				Connection: keep-alive
+
+			I Believe there is a bounds error. In testing the Modify parameter could be 0-7 With the Page parameter as 1.
+			My guess is that there is a total of 7 possible targets per page.  
+
+
+	D-Link Notes:
+
+		telnetd server:
+
+				Initi Script:
+
+				-> % cat S80telnetd.sh
+				#!/bin/sh
+				orig_devconfsize=`xmldbc -g /runtime/device/devconfsize`
+				echo [$0]: $1 ... > /dev/console
+				if [ "$1" = "start" ] && [ "$orig_devconfsize" = "0" ]; then
+					if [ -f "/usr/sbin/login" ]; then
+						image_sign=`cat /etc/config/image_sign`
+						telnetd -l /usr/sbin/login -u Alphanetworks:$image_sign -i br0 &
+					else
+						telnetd &
+					fi
+				else
+					killall telnetd
+				fi
+
+				Contents of the file:
+
+					wrgac01_dlob.hans_dir865
+
+
+			Thus there should be a Telnet Service running on port 23 on interface br0:
+
+				Username:	Alphanetworks
+				Password:	wrgac01_dlob.hans_dir865
+
+			I will verify this when I get home...				
+
+
+
+
+
+
+
+
+
+
+

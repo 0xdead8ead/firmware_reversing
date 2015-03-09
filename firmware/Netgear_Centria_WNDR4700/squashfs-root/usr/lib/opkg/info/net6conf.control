@@ -1,0 +1,13 @@
+Package: net6conf
+Version: 0.2-1
+Depends: kmod-ipv6
+Provides: 
+Source: package/net6conf
+Section: ipv6
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: all
+Installed-Size: 62605
+Description:  IPv6 scripts

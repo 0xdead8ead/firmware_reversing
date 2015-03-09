@@ -1,0 +1,13 @@
+Package: broker
+Version: 1
+Depends: 
+Provides: 
+Source: package/broker
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 55432
+Description:  a utility for ReadSHARE Cloud

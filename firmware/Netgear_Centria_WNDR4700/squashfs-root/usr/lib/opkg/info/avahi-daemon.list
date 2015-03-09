@@ -1,0 +1,8 @@
+/usr/config/avahi/services/http.service
+/usr/config/avahi/services/afpd.service
+/usr/sbin/avahi-daemon
+/etc/init.d/avahi-daemon
+/etc/avahi/avahi-daemon.conf
+/usr/config/avahi/services/smbd.service
+/usr/config/avahi/services/adisk.service
+/etc/avahi/services

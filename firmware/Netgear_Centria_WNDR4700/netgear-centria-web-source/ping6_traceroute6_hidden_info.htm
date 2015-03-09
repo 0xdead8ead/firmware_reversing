@@ -1,0 +1,56 @@
+<% http_header() %>
+<% nobody_header("ping6_traceroute6_hidden_info.htm", "ping6") %>
+
+<% save_timestamp("ping6", "traceroute6", "netstat6") %>
+<script>
+function ping6_start()
+{
+	var cf=document.forms[0];
+	cf.ping6_text.value=cf.ping6_addr.value;
+	cf.submit();
+}
+function traceroute6_start()
+{
+	var cf=document.forms[0];
+	cf.submit_flag.value="traceroute6";
+	cf.traceroute6_text.value=cf.traceroute6_addr.value;
+	cf.submit();
+}
+function netstat6_start()
+{
+	var cf=document.forms[0];
+	cf.submit_flag.value="netstat6";
+	cf.submit();
+}
+</script>
+<input type="hidden" name="ping6_text">
+<input type="hidden" name="traceroute6_text">
+<table align=center>
+<tr><td>ping6 to $spacebar</td>
+<td><input type="text" id="ping6_addr" value="<% cfg_get("ping6addr_msg") %>"></td>
+<td><input type="button" value="start" onclick="ping6_start()">
+&nbsp;&nbsp;<input type="button" value='$refresh_mark' onClick="location.reload();return false;"></td>
+</tr>
+<tr><td colspan=3>
+<textarea ROWS="10" cols="116" readonly><% ping6_echo_file("/tmp/ping6_result") %></textarea>
+</td></tr> 
+<tr><td>traceroute6 to $spacebar</td>
+<td><input type="text" id="traceroute6_addr" value="<% cfg_get("traceroute6addr_msg") %>"></td>
+<td><input type="button" value="start" onclick="traceroute6_start()">
+&nbsp;&nbsp;<input type="button" value='$refresh_mark' onClick="location.reload();return false;">
+</td></tr>
+<tr><td colspan=3>
+<textarea ROWS="10" cols="116" readonly><% ping6_echo_file("/tmp/traceroute6_result") %></textarea>
+</td></tr>
+<tr><td>show ip route6 $spacebar</td>
+<td></td>
+<td><input type="button" value="start" onclick="netstat6_start()">
+&nbsp;&nbsp;<input type="button" value='$refresh_mark' onClick="location.reload();return false;">
+</td></tr>
+<tr><td colspan=3>
+<textarea ROWS="10" cols="116" readonly><% ping6_echo_file("/tmp/netstat6_result") %></textarea>
+</td></tr>
+</table>
+</form>
+</body>
+</html>

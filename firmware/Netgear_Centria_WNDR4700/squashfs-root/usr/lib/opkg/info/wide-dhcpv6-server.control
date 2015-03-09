@@ -1,0 +1,17 @@
+Package: wide-dhcpv6-server
+Version: 20080615-2
+Depends: kmod-ipv6
+Provides: 
+Source: package/wide-dhcpv6
+Section: ipv6
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 141092
+Description:  WIDE-DHCPv6 is an open-source implementation of Dynamic Host Configuration Protocol
+ for IPv6 (DHCPv6) originally developed by the KAME project. The implementation
+ mainly conforms to the following standards: RFC3315,3319,3633,3646,4075,4272,etc.
+ 
+ This package installs the server component.

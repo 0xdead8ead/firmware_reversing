@@ -1,0 +1,13 @@
+Package: detcable
+Version: 1
+Depends: 
+Provides: 
+Source: package/detcable
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 26920
+Description:  Update utility for wan cable link detect

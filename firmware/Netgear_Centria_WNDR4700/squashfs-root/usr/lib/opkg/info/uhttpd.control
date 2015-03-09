@@ -1,0 +1,15 @@
+Package: uhttpd
+Version: 31
+Depends: 
+Provides: 
+Source: package/uhttpd
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: Jo-Philipp Wich <xm@subsignal.org>
+Architecture: wndr4700
+Installed-Size: 77893
+Description:  uHTTPd is a tiny single threaded HTTP server with TLS, CGI and Lua
+ support. It is intended as a drop-in replacement for the Busybox
+ HTTP daemon.

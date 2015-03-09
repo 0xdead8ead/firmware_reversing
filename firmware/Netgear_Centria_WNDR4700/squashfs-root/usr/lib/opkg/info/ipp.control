@@ -1,0 +1,13 @@
+Package: ipp
+Version: 1
+Depends: 
+Provides: 
+Source: package/ipp
+Section: dni
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 33528
+Description:  IP setting tools for Home Router

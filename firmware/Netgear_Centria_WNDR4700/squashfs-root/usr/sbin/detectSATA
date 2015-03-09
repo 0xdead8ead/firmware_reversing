@@ -1,0 +1,52 @@
+#!/bin/sh /etc/rc.common
+
+start() {
+	cat /proc/partitions | grep "sd" | awk '{print $4}' > /tmp/storage_device_info
+	if [ $? == 0 ]; then
+		while read LINE
+		do
+			if [ `length $LINE` == '4' ]; then
+				continue
+			fi
+			hdparm -i /dev/$LINE | grep Model > /dev/null
+			if [ $? == 0 ]; then
+				SATA=$LINE
+				echo "$SATA" > /tmp/SATA_SerialNo
+				SATA_SerialNo=`hdparm -i /dev/$LINE | grep SerialNo | awk -F = '{print $4}' | sed 's/[[:space:]]*$//' | sed 's/^[[:space:]]*//'`
+				echo "$SATA_SerialNo" >> /tmp/SATA_SerialNo
+				/bin/config set sata_diskname=$SATA
+				/bin/config set sata_serial_no="$SATA_SerialNo"
+				/bin/config commit
+				break
+			fi
+		done < /tmp/storage_device_info
+
+		if [ ! -f /tmp/SATA_SerialNo ]; then
+			/bin/config unset sata_diskname
+			/bin/config unset sata_serial_no
+			/bin/config commit
+		fi
+
+		rm /tmp/storage_device_info
+	fi
+	
+	if [ "x$($CONFIG get sata_diskname)" != "x" ]; then
+		count=1
+		partition_count_max=`$CONFIG get sata_partition_count`
+		if [ "x$partition_count_max" != "x" ]; then
+			while [ $count -le $partition_count_max ]
+			do
+				if [ "x$($CONFIG get sata_partition$count)" != "x" ]; then
+					$CONFIG unset sata_partition$count
+				fi
+			count=`expr $count + 1`
+			done
+		fi
+		$CONFIG set sata_partition_count=0
+		$CONFIG set sata_partition_status=0
+		$CONFIG commit
+	fi
+}
+
+start
+

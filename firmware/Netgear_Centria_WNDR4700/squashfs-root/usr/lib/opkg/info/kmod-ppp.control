@@ -1,0 +1,13 @@
+Package: kmod-ppp
+Version: 2.6.32-1
+Depends: kernel (=2.6.32-1), kmod-crc-ccitt
+Provides: 
+Source: package/kernel
+Section: kernel
+Status: unknown hold not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 70667
+Description:  Kernel modules for PPP support

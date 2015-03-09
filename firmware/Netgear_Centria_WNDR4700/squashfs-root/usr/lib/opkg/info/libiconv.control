@@ -1,0 +1,13 @@
+Package: libiconv
+Version: 1.11-1
+Depends: 
+Provides: 
+Source: package/libiconv
+Section: libs
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 515842
+Description:  Character set conversion library

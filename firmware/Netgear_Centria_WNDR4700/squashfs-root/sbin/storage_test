@@ -1,0 +1,11 @@
+#!/bin/sh
+
+[ $# = 0 ] && { echo "  $0 <?what is your disk>"; exit; }
+[ ! -d $1 ] && { echo " $1 <?where is your disk>"; exit; }
+
+echo "Enter storage writting test:"
+
+while [ 1 ]
+do
+	dd if=/dev/zero of=$1/file bs=1 count=1 2> /dev/null
+done

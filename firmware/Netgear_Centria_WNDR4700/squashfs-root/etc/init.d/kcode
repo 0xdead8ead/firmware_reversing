@@ -1,0 +1,10 @@
+#!/bin/sh /etc/rc.common
+START=90
+
+KVER=`uname -r | cut -f 1`
+MODULE_PATH=/lib/modules/$KVER
+
+boot() {
+	/sbin/insmod $MODULE_PATH/GPL_NetUSB.ko
+	/sbin/insmod $MODULE_PATH/NetUSB.ko
+}

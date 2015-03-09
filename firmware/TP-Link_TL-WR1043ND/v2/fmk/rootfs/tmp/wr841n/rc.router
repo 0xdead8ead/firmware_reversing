@@ -1,0 +1,62 @@
+#!/bin/sh
+
+#set env
+wan_if=eth0.2
+wan_static_if=eth0.2
+wan_ip=0.0.0.0
+wan_mask=0.0.0.0
+
+lan_if=br0
+lan_ip=192.168.0.1
+lan_mask=255.255.255.0
+
+lo_if=lo
+lo_ip=127.0.0.1
+
+http_client=0.0.0.0
+http_port=80
+http_mask=255.255.255.255
+
+ftp_ctl_port=21
+ftp_data_port=50000:60000
+wan_sec_ip=0.0.0.0
+ftp_target=DROP
+
+dns_server=1.0.0.19
+
+mss=1460
+lan_ping_target=ACCEPT
+wan_ping_target=ACCEPT
+
+spi_target=DROP
+
+#rules
+iptables -t filter -R INPUT 1  -i $lan_if -p tcp -s $lan_ip/$lan_mask -d $lan_ip --dport $http_port -j INPUT_MAC
+iptables -t filter -R INPUT 2  -i $lan_if ! -p icmp -s $lan_ip/$lan_mask ! -d $wan_ip -j ACCEPT
+iptables -t filter -R INPUT 3  -i $lo_if -p ALL -j ACCEPT -m comment --comment "loop back"
+iptables -t filter -R INPUT 4  -i $lan_if -p icmp --icmp-type echo-request -j $lan_ping_target
+iptables -t filter -R INPUT 5  -i $wan_if -p icmp --icmp-type echo-request -d $wan_ip -j $wan_ping_target
+iptables -t filter -R INPUT 6  -i $wan_static_if -p icmp --icmp-type echo-request -d $wan_sec_ip -j $wan_ping_target
+iptables -t filter -R INPUT 7  -i $lan_if -p udp --dport 67 --sport 68 -j ACCEPT 
+iptables -t filter -R INPUT 8  -i $wan_static_if -p udp --dport 68 --sport 67 -j ACCEPT 
+iptables -t filter -R INPUT 9  -p tcp -s $http_client/$http_mask --dport $http_port -j ACCEPT 
+iptables -t filter -R INPUT 10  -i $wan_if -p tcp -d $wan_ip --dport $ftp_ctl_port -j $ftp_target
+iptables -t filter -R INPUT 11  -i $wan_if -p tcp -d $wan_ip --dport $ftp_data_port -m state --state NEW -j $ftp_target
+iptables -t filter -R INPUT 12  -i $wan_static_if -p tcp -d $wan_sec_ip --dport $ftp_ctl_port -j $ftp_target
+iptables -t filter -R INPUT 13  -i $wan_static_if -p tcp -d $wan_sec_ip --dport $ftp_data_port -m state --state NEW -j $ftp_target
+iptables -t filter -R INPUT 14  -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -t filter -I FORWARD 1  -o $lan_if -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -t filter -I FORWARD 2  -i $lan_if -j ACCEPT
+iptables -t filter -I FORWARD 3  -m state --state NEW -j $spi_target
+iptables -t nat -I PREROUTING 1  -i $wan_static_if -d 255.255.255.255 -p udp --sport 67 --dport 68 -j ACCEPT
+iptables -t nat -I PREROUTING 2 -d 224.0.0.0/4 -j ACCEPT
+iptables -t nat -I PREROUTING 3  -s 255.255.255.255 -j ACCEPT
+iptables -t nat -I PREROUTING 4  -j PREROUTING_FTP
+iptables -t nat -I PREROUTING 5  -j PREROUTING_VS
+iptables -t nat -I PREROUTING 6  -j PREROUTING_PT
+iptables -t nat -I PREROUTING 7  -j PREROUTING_UPNP
+iptables -t nat -I PREROUTING 8  -d $lan_ip -p udp --dport 53 -j DNAT --to-destination $dns_server
+iptables -t nat -I PREROUTING 9  -j PREROUTING_DMZ
+iptables -t nat -I POSTROUTING 1  -o $wan_if -j MASQUERADE
+iptables -t nat -I POSTROUTING 2  -s $lan_ip/$lan_mask -d $lan_ip/$lan_mask -j SNAT --to-source $wan_ip
+iptables -t nat -I POSTROUTING 3  -o $wan_static_if -j MASQUERADE

@@ -1,0 +1,20 @@
+<% ca_http_header("style/hijack_style.css","style/hijack_ru_welcome.css","/funcs.js") %>
+<% free_dns_hijack() %>
+<BODY bgcolor=#ffffff>
+<script>
+var do_hijack="<% cfg_get("dns_hijack") %>";
+//if (do_hijack == "0")
+//	document.write('<META http-equiv="refresh" content="6; url=BAS_basic.htm">');
+//else
+	document.write('<META http-equiv="refresh" content="6; url=ca_04_region.htm">');
+</script>
+<FORM>
+<div class="wizard_content_div">
+<div class="wizard_words_div">
+	<H1><script>document.write(RU_CA_head)</script></H1>
+	<p><script>document.write(RU_success)</script></p>
+</div><!--wizard_words_div -->
+</div><!--wizard_content_div -->
+</FORM>
+</BODY>
+</HTML>

@@ -1,0 +1,104 @@
+# rules file for hotplug2
+
+SUBSYSTEM == block, DEVPATH is set, MAJOR is set, MINOR is set {
+        makedev /dev/%DEVICENAME% 0644
+}
+
+#For debugging
+#ACTION is set {
+#       printdebug
+#}
+
+# Load modules (what old hotplug did)
+MODALIAS is set {
+        exec modprobe -q %MODALIAS% ;
+}
+
+# Create device nodes
+DEVPATH is set, MAJOR is set, MINOR is set {
+        makedev /dev/%DEVICENAME% 0644
+}
+
+# Add and update parallel printer device
+ACTION == add, PHYSDEVPATH ~~ "/usb[0-9]*/", DEVICENAME ~~ "^lp[0-9]+$", DEVPATH is set, MAJOR is set, MINOR is set {
+	run "/usr/sbin/update_cups add %DEVICENAME%"
+}
+
+# Add USB disk
+ACTION == add, PHYSDEVPATH ~~ "/usb[0-9]*/", DEVTYPE ~~ "^disk$", MAJOR is set, MINOR is set {
+	exec /sbin/usb_disk_event
+}
+
+# Remove USB disk
+ACTION == remove, PHYSDEVPATH ~~ "/usb[0-9]*/", DEVTYPE ~~ "^disk$", MAJOR is set, MINOR is set {
+	exec /sbin/usb_disk_event
+}
+
+# Mount a USB flashdisk
+ACTION == add, PHYSDEVPATH ~~ "/usb[0-9]*/", DEVICENAME ~~ "^sd[a-z][0-9]*$", DEVPATH is set, MAJOR is set, MINOR is set {
+	makedev /dev/%DEVICENAME% 0644
+	run "/sbin/hotplug2.mount %DEVICENAME%"
+}
+
+# Unmount a USB flashdisk
+ACTION == remove, PHYSDEVPATH ~~ "/usb[0-9]*/", DEVICENAME ~~ "^sd[a-z][0-9]*$", MAJOR is set, MINOR is set {
+	run "/usr/sbin/detach_afp_shares %DEVICENAME% hotplug2"
+	exec /sbin/hotplug2.umount %DEVICENAME% ;
+}
+
+# WLAN Toggle
+SUBSYSTEM == button, BUTTON == wlan_toggle, BUTTON_ACTION == pressed {
+	exec /sbin/detect_factory wifi_onoff;
+	break_if_failed
+        exec /sbin/wlan toggle;
+}
+
+# WLAN logger
+SUBSYSTEM == wlan-log, TYPE == acl {
+        exec logger "[WLAN access %REPORT_ACTION%] from MAC: %MAC%," ;
+}
+
+SUBSYSTEM == wlan-log, TYPE == auth {
+        exec logger "[WLAN access %REPORT_ACTION%: incorrect security] from MAC address %MAC%," ;
+}
+
+# Delete and update parallel printer device
+ACTION == remove, PHYSDEVPATH ~~ "/usb[0-9]*/", DEVICENAME ~~ "^lp[0-9]+$", DEVPATH is set, MAJOR is set, MINOR is set {
+	run "/usr/sbin/update_cups delete %DEVICENAME%"
+}
+
+# WPS Button
+SUBSYSTEM == button, BUTTON == wps_pbc, BUTTON_ACTION == pressed {
+	exec /sbin/detect_factory wps_pbc_pressed;
+	break_if_failed
+        exec /sbin/wps_pbc pressed;
+}
+
+SUBSYSTEM == button, BUTTON == wps_pbc, BUTTON_ACTION == released {
+	exec /sbin/detect_factory wps_pbc_released;
+	break_if_failed
+        exec /sbin/wps_pbc released;
+}
+
+SUBSYSTEM == button, BUTTON == reset, BUTTON_ACTION == reboot {
+	exec /sbin/detect_factory reboot;
+	break_if_failed
+        exec /sbin/reboot;
+}
+
+SUBSYSTEM == button, BUTTON == reset, BUTTON_ACTION == default {
+	exec /sbin/detect_factory reset_default;
+	break_if_failed
+        exec /bin/config default;
+        exec /sbin/reboot;
+}
+
+SUBSYSTEM == button, BUTTON == backup, BUTTON_ACTION == pressed {
+	exec /sbin/detect_factory backup;
+	break_if_failed
+        exec /sbin/backup;
+}
+
+SUBSYSTEM == button, BUTTON == fan_rpm_fault, BUTTON_ACTION == fault {
+        run "/sbin/log_fan_rpm_fault &"
+}

@@ -1,0 +1,13 @@
+Package: libgcc
+Version: 4.5.1-61
+Depends: 
+Provides: 
+Source: package/base-files
+Section: libs
+Status: unknown hold not-installed
+Essential: yes
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 89588
+Description:  GCC support library

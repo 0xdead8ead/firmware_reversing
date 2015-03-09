@@ -1,0 +1,13 @@
+Package: taglib
+Version: 1.4-1
+Depends: zlib
+Provides: 
+Source: package/taglib
+Section: libs
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 284790
+Description:  Audio output library

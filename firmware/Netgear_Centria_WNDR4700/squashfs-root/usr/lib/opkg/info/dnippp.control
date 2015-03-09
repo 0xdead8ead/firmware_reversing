@@ -1,0 +1,13 @@
+Package: dnippp
+Version: 2.4.3-8
+Depends: kmod-ppp
+Provides: 
+Source: package/dnippp
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 238363
+Description:  This package contains the PPP (Point-to-Point Protocol) daemon.

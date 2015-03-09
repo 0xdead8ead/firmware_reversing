@@ -1,0 +1,13 @@
+Package: netatalk
+Version: 2.2.1-3
+Depends: libdb47, libgcrypt, libopenssl, netatalk-utility
+Provides: 
+Source: package/netatalk
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 839409
+Description:  netatalk

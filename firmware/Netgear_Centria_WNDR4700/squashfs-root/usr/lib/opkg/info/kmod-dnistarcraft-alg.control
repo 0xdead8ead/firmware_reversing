@@ -1,0 +1,13 @@
+Package: kmod-dnistarcraft-alg
+Version: 2.6.32-1
+Depends: kernel (=2.6.32-1)
+Provides: 
+Source: package/kmod-starcraft
+Section: kernel
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 27637
+Description:  Starcraft ALG linux kernel module for 2.6.32

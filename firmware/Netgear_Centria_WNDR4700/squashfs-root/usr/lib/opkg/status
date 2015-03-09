@@ -1,0 +1,1145 @@
+Package: net-scan
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851540
+
+Package: libc
+Version: 2.13-61
+Provides:
+Status: install hold installed
+Essential: yes
+Architecture: wndr4700
+Installed-Time: 1367851518
+
+Package: kmod-l2tp
+Version: 2.6.32-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851535
+
+Package: realpath
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851542
+
+Package: ip
+Version: 2.6.35-2
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Conffiles:
+ /etc/iproute2/rt_tables a1313318d6778fe6b8c680248ef5a463
+Installed-Time: 1367851524
+
+Package: libjpeg
+Version: v6b-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851537
+
+Package: libpthread
+Version: 2.13-61
+Depends: librt
+Provides:
+Status: install hold installed
+Essential: yes
+Architecture: wndr4700
+Installed-Time: 1367851518
+
+Package: kmod-ftp-alg
+Version: 2.6.32-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851535
+
+Package: sfdisk
+Version: 2.13.0.1-4
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851544
+
+Package: proftpd
+Version: 1.3.3-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851541
+
+Package: wide-dhcpv6-server
+Version: 20080615-2
+Depends: kmod-ipv6
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851544
+
+Package: ipp
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851523
+
+Package: wide-dhcpv6-control
+Version: 20080615-2
+Depends: kmod-ipv6
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851544
+
+Package: ebtables
+Version: 2.0.9-2-1
+Depends: kmod-ebtables
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851522
+
+Package: net-dump
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851540
+
+Package: libogg
+Version: 1.1.3-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851537
+
+Package: udhcp
+Version: 0.9.8-3
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851544
+
+Package: dnippp-mod-pptp
+Version: 2.4.3-8
+Depends: dnippp, kmod-pptp
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851521
+
+Package: kmod-trigger
+Version: 2.6.32-wndr4700-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851536
+
+Package: libgcrypt
+Version: 1.5.0-1
+Depends: libgpg-error
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851536
+
+Package: ssmtp
+Version: 2.64-2
+Depends: libopenssl
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851543
+
+Package: kmod-pppoe
+Version: 2.6.32-1
+Depends: kernel (= 2.6.32-1), kmod-ppp
+Provides:
+Status: install hold installed
+Architecture: wndr4700
+Installed-Time: 1367851526
+
+Package: led-control
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851536
+
+Package: detcable
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851519
+
+Package: base-files
+Version: 61-r24196
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Conffiles:
+ /etc/banner db423ef5ca8f04413f2f92248904642d
+ /etc/inittab bca4ba7bee81132657e61579c1fd64ad
+ /etc/group 31c4c2ea7b79761476954e66f9d4ed19
+ /etc/passwd b85ef5a2b789f8cf124ec14246aa9e73
+ /etc/profile 27f9b815db53c004f0b9a8df94155b44
+ /etc/shells 725ba6f40dff0612f61ecd3f171bb3e1
+ /etc/sysctl.conf 4e5a5b3836f8e87c14c17698c1b28690
+ /etc/rc.local 6f8bfdaf36d3ec4aa9be6e96fa61d32b
+ /etc/sysupgrade.conf f91aef484370cefee501d64b5725c1d2
+ /etc/config/system aba5c5492df4d6bc8826c16130099cc2
+ /etc/config/network 7d59ee67bcc69490f3f524d043e4801a
+ /etc/config/timeserver 7c9118e571e55a6bbc1b419e77883d76
+Installed-Time: 1367851517
+
+Package: libcom_err
+Version: 1.42-2
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851522
+
+Package: libpcre
+Version: 7.6-2
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851541
+
+Package: libexif
+Version: 0.6.17-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851536
+
+Package: utelnetd
+Version: 0.1.9-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851544
+
+Package: wlan-common
+Version: 2.5-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851545
+
+Package: kmod-dnistarcraft-alg
+Version: 2.6.32-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851535
+
+Package: kmod-conenat
+Version: 2.6.32-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851534
+
+Package: dnsmasq
+Version: 2.39-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Conffiles:
+ /etc/dnsmasq.conf 221b4e7cd208ff9bd9ef5378c0814819
+Installed-Time: 1367851522
+
+Package: libblkid
+Version: 1.42-2
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851522
+
+Package: kmod-ipsec-alg
+Version: 2.6.32-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851535
+
+Package: libflac
+Version: 1.2.1-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851536
+
+Package: kmod-crc-ccitt
+Version: 2.6.32-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install hold installed
+Architecture: wndr4700
+Installed-Time: 1367851534
+
+Package: netatalk-utility
+Version: 1.0.0-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851540
+
+Package: kmod-dnshijack
+Version: 2.6.32-wndr4700-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851534
+
+Package: libgpg-error
+Version: 1.10-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851537
+
+Package: libintl
+Version: 0.17-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851523
+
+Package: kmod-pptp
+Version: 2.6.32-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851535
+
+Package: atheros-aquila-madwifi-11n-scripts
+Version: 0-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851516
+
+Package: libvorbis
+Version: 1.2.0-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851538
+
+Package: miniupnpd
+Version: 20070127-3
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851539
+
+Package: libxml2
+Version: 2.7.2-2
+Depends: libpthread, zlib
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851538
+
+Package: phddns
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851541
+
+Package: libuci
+Version: 2010-09-28.2-2
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851543
+
+Package: detwan
+Version: 1.0-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851519
+
+Package: avahi-dnsconfd
+Version: 0.6.25-1
+Depends: libavahi
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851517
+
+Package: libcyassl
+Version: 1.6.5-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851519
+
+Package: dnippp-mod-pppoe
+Version: 2.4.3-8
+Depends: dnippp, kmod-pppoe
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851521
+
+Package: libdaemon
+Version: 0.14-2
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851536
+
+Package: libpng
+Version: 1.4.3-1
+Depends: zlib
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851538
+
+Package: libavahi
+Version: 0.6.25-1
+Depends: libdaemon, libpthread, libgdbm
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851517
+
+Package: uci
+Version: 2010-09-28.2-2
+Depends: libuci
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851543
+
+Package: dnibusybox
+Version: 1.4.2-2
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851521
+
+Package: libiptc
+Version: 1.4.4-2
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851524
+
+Package: proccgi
+Version: 4
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851541
+
+Package: curl
+Version: 7.20.0-1
+Depends: libopenssl
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851518
+
+Package: kmod-pptp-alg
+Version: 2.6.32-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851535
+
+Package: libstdcpp
+Version: 4.5.1-61
+Provides:
+Status: install hold installed
+Essential: yes
+Architecture: wndr4700
+Installed-Time: 1367851518
+
+Package: mtd
+Version: 14
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851539
+
+Package: libltdl
+Version: 1.5.26-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851538
+
+Package: kmod-urlblock
+Version: 2.6.32-wndr4700-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851536
+
+Package: i2c-tools
+Version: 3.0.3-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851523
+
+Package: libgcc
+Version: 4.5.1-61
+Provides:
+Status: install hold installed
+Essential: yes
+Architecture: wndr4700
+Installed-Time: 1367851518
+
+Package: ez-ipupdate
+Version: 3.0.10-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851522
+
+Package: pot
+Version: 4
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851541
+
+Package: samba-scripts
+Version: 1.0.0-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851542
+
+Package: parted
+Version: 3.0-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851541
+
+Package: net-cgi
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851539
+
+Package: leafnetadmin
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851536
+
+Package: dnippp
+Version: 2.4.3-8
+Depends: kmod-ppp
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851521
+
+Package: artmtd
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851516
+
+Package: libuuid
+Version: 1.42-2
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851522
+
+Package: net-util
+Version: 1-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851540
+
+Package: cfdisk
+Version: 2.13.0.1-4
+Depends: libncurses
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851544
+
+Package: dni-ripd
+Version: 0.01-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851519
+
+Package: xfsprogs
+Version: 3.1.6
+Depends: libuuid
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851545
+
+Package: net-disk
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851540
+
+Package: datalib
+Version: 1.0-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851519
+
+Package: librt
+Version: 2.13-61
+Provides:
+Status: install hold installed
+Essential: yes
+Architecture: wndr4700
+Installed-Time: 1367851518
+
+Package: ap-mode
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851516
+
+Package: kmod-apm-emac-ar8327-enet
+Version: 2.6.32+-wndr4700-
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851534
+
+Package: tune2fs
+Version: 1.42-2
+Depends: e2fsprogs
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851522
+
+Package: avahi-autoipd
+Version: 0.6.25-1
+Depends: libdaemon
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851517
+
+Package: kmod-dnih323
+Version: 2.6.32-wndr4700-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851534
+
+Package: trafficmeter
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851543
+
+Package: net-wall
+Version: 2
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851540
+
+Package: broker
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851518
+
+Package: kmod-spiadvdos
+Version: 2.6.32-wndr4700-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851535
+
+Package: ip6tables-utils
+Version: 1.4.4-2
+Depends: ip6tables
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851524
+
+Package: telnetenable
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851543
+
+Package: iptables
+Version: 1.4.4-2
+Depends: kmod-ipt-core, libiptc, libxtables
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851524
+
+Package: hotplug2
+Version: 0.9+r102-2
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851523
+
+Package: ppp-nas
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851541
+
+Package: atheros-aquila-wpa2
+Version: 0.5.9-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851517
+
+Package: kmod-netgear-reject
+Version: 2.6.32-wndr4700-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851535
+
+Package: bridge
+Version: 1.4-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851518
+
+Package: udev
+Version: 106-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851544
+
+Package: libncurses
+Version: 5.7-3
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851539
+
+Package: e2fsprogs
+Version: 1.42-2
+Depends: libblkid, libuuid, libext2fs, libpthread, libcom_err
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851522
+
+Package: kmod-ppp
+Version: 2.6.32-1
+Depends: kernel (= 2.6.32-1), kmod-crc-ccitt
+Provides:
+Status: install hold installed
+Architecture: wndr4700
+Installed-Time: 1367851525
+
+Package: avahi-daemon
+Version: 0.6.25-1
+Depends: libavahi, libexpat
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Conffiles:
+ /etc/avahi/avahi-daemon.conf 878633a88d1ce4136726b7a27162f259
+Installed-Time: 1367851517
+
+Package: smartmontools
+Version: 5.42
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851543
+
+Package: noip2
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851540
+
+Package: minidlna
+Version: latest-3
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851539
+
+Package: kmod-wndr4700-madwifi
+Version: 2.6.32+-wndr4700-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851545
+
+Package: igmpproxy
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851523
+
+Package: kmod-ipv6-cone
+Version: 2.6.32-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851535
+
+Package: taglib
+Version: 1.4-1
+Depends: zlib
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851543
+
+Package: libiconv
+Version: 1.11-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851537
+
+Package: uhttpd
+Version: 31
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Conffiles:
+ /etc/config/uhttpd edd44084e637d8bb24f51c444700f943
+Installed-Time: 1367851544
+
+Package: ip6tables
+Version: 1.4.4-2
+Depends: kmod-ip6tables
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851524
+
+Package: libxtables
+Version: 1.4.4-2
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851524
+
+Package: kmod-spidos
+Version: 2.6.32-wndr4700-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851535
+
+Package: zlib
+Version: 1.2.5-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851545
+
+Package: readyshare
+Version: 0.0.13
+Depends: realpath, leafnetadmin, fsgrab, curl, broker, tail
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851542
+
+Package: lltd
+Version: 0.1-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851538
+
+Package: dni-ntpclient
+Version: 4
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851519
+
+Package: net6conf
+Version: 0.2-1
+Depends: kmod-ipv6
+Provides:
+Status: install user installed
+Architecture: all
+Installed-Time: 1367851540
+
+Package: udevtrigger
+Version: 106-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851544
+
+Package: wide-dhcpv6-client
+Version: 20080615-2
+Depends: kmod-ipv6
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851544
+
+Package: radvd
+Version: 1.5-1
+Depends: kmod-ipv6
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Conffiles:
+ /etc/config/radvd 1a335d0dfa2be6f129ef1d041d6cc9e8
+Installed-Time: 1367851542
+
+Package: fdisk
+Version: 2.13.0.1-4
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851544
+
+Package: libid3tag
+Version: 0.15.1b-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851537
+
+Package: kmod-dnirtsp
+Version: 2.6.32+-wndr4700-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851534
+
+Package: libsqlite3
+Version: 3.6.16-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851543
+
+Package: dnippp-mod-l2tp
+Version: 2.4.3-8
+Depends: dnippp, kmod-l2tp
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851521
+
+Package: libext2fs
+Version: 1.42-2
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851522
+
+Package: ffmpeg
+Version: 0.5-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851523
+
+Package: libexpat
+Version: 2.0.1-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851522
+
+Package: kernel
+Version: 2.6.32-1
+Provides:
+Status: install hold installed
+Architecture: wndr4700
+Installed-Time: 1367851524
+
+Package: libcharset
+Version: 1.11-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851537
+
+Package: samba
+Version: 3.0.24-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851542
+
+Package: netatalk
+Version: 2.2.1-3
+Depends: libdb47, libgcrypt, libopenssl, netatalk-utility
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851540
+
+Package: libdevmapper
+Version: 2.02.91-1
+Depends: kmod-dm
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851539
+
+Package: kmod-kcode
+Version: 2.6.32+-wndr4700-
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851535
+
+Package: kmod-dnisip
+Version: 2.6.32-wndr4700-1
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851534
+
+Package: px5g
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851542
+
+Package: libgdbm
+Version: 1.8.3-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851523
+
+Package: fsgrab
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851523
+
+Package: dnichat
+Version: 2.4.3-8
+Depends: dnippp
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851521
+
+Package: uhttpd-mod-tls
+Version: 31
+Depends: uhttpd, libcyassl
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851544
+
+Package: wireless-tools
+Version: 29-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851544
+
+Package: zebra
+Version: 0.95a-1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851545
+
+Package: libopenssl
+Version: 0.9.8p-1
+Depends: zlib
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851541
+
+Package: vmstat
+Version: 1
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851544
+
+Package: libdb47
+Version: 4.7.25.NC-4
+Depends: libxml2
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851519
+
+Package: kmod-dni-qos
+Version: 2.6.32+-wndr4700-
+Depends: kernel (= 2.6.32-1)
+Provides:
+Status: install user installed
+Architecture: wndr4700
+Installed-Time: 1367851534
+

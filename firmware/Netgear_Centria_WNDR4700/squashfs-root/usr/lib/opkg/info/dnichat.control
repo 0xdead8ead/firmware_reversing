@@ -1,0 +1,14 @@
+Package: dnichat
+Version: 2.4.3-8
+Depends: dnippp
+Provides: 
+Source: package/dnippp
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 31112
+Description:  This package contains an utility to establish conversation with other 
+ PPP servers (via a modem).

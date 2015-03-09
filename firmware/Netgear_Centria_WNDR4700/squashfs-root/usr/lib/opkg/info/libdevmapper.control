@@ -1,0 +1,14 @@
+Package: libdevmapper
+Version: 2.02.91-1
+Depends: kmod-dm
+Provides: 
+Source: package/lvm2
+Section: libs
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: Luka Perkov <openwrt@lukaperkov.net>
+Architecture: wndr4700
+Installed-Size: 191328
+Description:  The device-mapper is a component of the 2.6 linux kernel that supports logical
+ volume management. It is required by LVM2 and EVMS.

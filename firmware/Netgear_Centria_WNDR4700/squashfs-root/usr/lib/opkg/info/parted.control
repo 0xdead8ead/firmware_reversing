@@ -1,0 +1,14 @@
+Package: parted
+Version: 3.0-1
+Depends: 
+Provides: 
+Source: package/parted
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 371932
+Description:  parted Partition editor
+ http://www.gnu.org/software/parted/index.shtml

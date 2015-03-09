@@ -1,0 +1,13 @@
+Package: kmod-dni-qos
+Version: 2.6.32+-wndr4700-
+Depends: kernel (=2.6.32-1)
+Provides: 
+Source: package/kmod-dni-qos
+Section: kernel
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 39428
+Description:  Module to support qos for kernel 2.6.32

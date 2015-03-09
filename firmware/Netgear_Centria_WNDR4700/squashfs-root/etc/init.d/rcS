@@ -1,0 +1,10 @@
+#!/bin/sh
+
+/etc/preinit.arch
+
+# Start all init scripts in /etc/init.d
+# executing them in numerical order.
+#
+for i in /etc/rc.d/S*; do
+	$i boot
+done

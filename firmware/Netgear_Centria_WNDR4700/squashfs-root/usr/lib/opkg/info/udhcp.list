@@ -1,0 +1,4 @@
+/sbin/udhcpc
+/sbin/udhcpd
+/usr/share/udhcpc/default.script
+/usr/share/udhcpc/default.script.ap

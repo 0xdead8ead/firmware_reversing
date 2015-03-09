@@ -1,0 +1,6 @@
+/usr/sbin/ripngd
+/usr/sbin/zebra
+/etc/init.d/ripngd
+/etc/ripngd.conf
+/etc/init.d/zebra
+/etc/zebra.conf

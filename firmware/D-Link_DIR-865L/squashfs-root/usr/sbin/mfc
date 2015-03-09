@@ -1,0 +1,185 @@
+#!/bin/sh
+case "$1" in
+save)
+	/etc/scripts/dbsave.sh
+	;;
+freset)
+	devconf del
+	NVRAMMTD=`grep nvram /proc/mtd | cut -d : -f 1`
+	NVRAMSIZE=64k
+	if [ "$NVRAMMTD" != "" ]; then
+		NVRAMNUM=`echo $NVRAMMTD | cut -d d -f 2`
+		if [ -b /dev/mtdblock/$NVRAMNUM ]; then
+			echo "erase nvram at /dev/mtdblock/$NVRAMNUM"
+			dd if=/dev/zero of=/dev/mtdblock/$NVRAMNUM bs=$NVRAMSIZE count=1 1>/dev/null 2>&1
+		fi
+	fi
+	;;
+isfreset)
+	SIZE=`devconf dump | scut -p "Data size :" -f 1`
+	if [ "$SIZE" = "0" ]; then
+		echo "YES"
+	else
+		echo "NO"
+	fi
+	;;
+init)
+	if [ $# -lt 3 ]; then
+		echo "Usage:"
+		echo "  mfc init <lanmac> <wlan24mac> <wlan5mac> <wanmac> <countrycode> <hw version> <pin> <wifipassword>"
+		exit 1
+	fi
+	LANMAC=`echo -e $2 | tr [A-Z] [a-z]`
+	WLAN24MAC=`echo -e $3 | tr [A-Z] [a-z]`
+	WLAN5MAC=`echo -e $4 | tr [A-Z] [a-z]`
+	WANMAC=`echo -e $5 | tr [A-Z] [a-z]`
+	CCODE="$6"
+	HWVER="$7"
+	PIN="$8"
+	PASSWORD="$9"
+	[ "$LANMAC" != "" ] && DEVDATA="$DEVDATA -e lanmac=$LANMAC -e wlan24mac=$WLAN24MAC -e wlan5mac=$WLAN5MAC"
+	[ "$WANMAC" != "" ] && DEVDATA="$DEVDATA -e wanmac=$WANMAC"
+	[ "$CCODE" = "" ] && CCODE="US"
+	[ "$HWVER" != "" ] && DEVDATA="$DEVDATA -e hwver=$HWVER"
+	[ "$PIN" != "" ] && DEVDATA="$DEVDATA -e pin=$PIN"
+	[ "$PASSWORD" != "" ] && DEVDATA="$DEVDATA -e wifipassword=$PASSWORD"
+	echo "devdata set -e countrycode=$CCODE $DEVDATA -f" > /dev/console
+	devdata set -e countrycode=$CCODE $DEVDATA -f
+	
+	[ "$LANMAC" != "" ] && nvram set et0macaddr=$LANMAC
+	# Show devdata and uboot data
+	echo "-------- devdata dump ----------------------" > /var/mfcdump
+	devdata dump >> /var/mfcdump
+	echo "-------- nvram setting ethaddr-----------" >> /var/mfcdump
+	nvram show | grep et0macaddr >> /var/mfcdump
+	echo "--------------------------------------------" >> /var/mfcdump
+	cat /var/mfcdump
+	rm /var/mfcdump
+	;;
+dump)
+	# Show devdata and uboot data
+	echo "-------- Firmware Version-------------------" > /var/mfcdump
+	echo FW_Ver=`cat /etc/config/buildver``cat /etc/config/buildrev` Build `cat /etc/config/buildno` >> /var/mfcdump
+	echo "-------- devdata dump ----------------------" >> /var/mfcdump
+	devdata dump >> /var/mfcdump
+	echo "-------- ubcfg get ethaddr ipaddr-----------" >> /var/mfcdump
+	ubcfg get ethaddr ipaddr >> /var/mfcdump
+	echo "--------------------------------------------" >> /var/mfcdump
+	cat /var/mfcdump
+	rm /var/mfcdump
+	;;
+wlan24)
+	xmldbc -s /wifi/entry:1/ssid "$2"
+	xmldbc -s /phyinf:4/media/channel "$3"
+	xmldbc -s /phyinf:4/media/dot11n/bw2040coexist "0"
+	xmldbc -s /wifi/entry:1/authtype "OPEN"
+	xmldbc -s /wifi/entry:1/encrtype "NONE"
+	service PHYINF.WIFI restart
+	;;
+wlan5)
+	xmldbc -s /wifi/entry:3/ssid "$2"
+	xmldbc -s /phyinf:6/media/channel "$3"
+	xmldbc -s /wifi/entry:3/authtype "OPEN"
+	xmldbc -s /wifi/entry:3/encrtype "NONE"
+	service PHYINF.WIFI restart
+	;;
+ver)
+	echo Ver `cat /etc/config/buildver``cat /etc/config/buildrev` Build `cat /etc/config/buildno`
+	;;
+get)
+	case $2 in
+	hwver)
+		if [ -f /etc/config/hwver ]; then
+			cat /etc/config/hwver
+		else
+			devdata get -e $2
+		fi
+		;;
+	*)
+		[ "$2" != "" ] && devdata get -e $2
+		;;
+	esac
+	;; 
+set)
+	[ "$2" != "" ] && devdata set -e $2
+	;;
+test)
+	case $2 in
+	on)
+		usockc /var/gpio_ctrl DEBUG
+		;;
+	off)
+		usockc /var/gpio_ctrl NODEBUG
+		;;
+	esac
+	;; 
+button)
+	case $2 in
+	reset)
+		usockc /var/gpio_ctrl GPIO_FRESET
+		cat /var/gpio_ctrl_result
+		;;
+	wps)
+		usockc /var/gpio_ctrl GPIO_WPSPBC
+		cat /var/gpio_ctrl_result
+		;;
+	esac
+	;;
+led)
+	case "$2" in
+	wps_blue)
+		usockc /var/gpio_ctrl WPS_BLUE
+		;;
+	wan_green)
+		usockc /var/gpio_ctrl INET_GREEN_ON
+		;;
+	wan_orange)
+		usockc /var/gpio_ctrl INET_ORANGE_ON
+		;;
+	status_green)
+		usockc /var/gpio_ctrl STATUS_GREEN
+		;;
+	status_orange)
+		usockc /var/gpio_ctrl STATUS_AMBER
+		;;
+	esac
+	;;
+usb)
+	USBSTOR=`cat /proc/bus/usb/devices  | grep Driver=usb-storage`
+	if [ "$USBSTOR" != "" ]; then
+		echo "Yes"
+	else
+		echo "NO"
+	fi
+	;;
+*)
+	echo "Usage: mfc {command} <params>"
+	echo "Commands:"
+	echo "  init <lanmac> <wlan24mac> <wlan5mac> <wanmac> <countrycode> <hw version> <pin> <wifipassword>"
+	echo "                           Init flash"
+	echo "  save                     Save current setting to flash"
+	echo ""
+	echo "  dump                     Dump environment vairables."
+	echo "  ver                      Show firmware version"
+    echo "  wlan24 <ssid>  <channel> switch ssid  and channel"
+	echo "  wlan5  <ssid2> <channel> switch ssid2 and channel"
+	echo ""
+	echo "  freset                   Factory reset"
+	echo "  isfreset                 Check if the device is reset to factory default."
+	echo ""
+	echo "  test on                  turn on test mode"
+	echo "  test off                 turn off test mode"
+	echo ""
+	echo "  button {reset|wps}"
+	echo "      reset                Get factory reset button status."
+	echo "      wps                  Get WPS button status."
+	echo ""
+	echo "  led { wps_blue | wan_green | wan_orange | status_green | status_orange }"
+	echo "      wps_blue             Set the WPS Led to blue  "
+	echo "      wan_green            Set the WAN Led to green "
+	echo "      wan_orange           Set the WAN Led to orange"
+	echo "      status_green         Set the status Led to green"
+	echo "      status_orange        Set the status Led to orange"
+	echo "  usb                      show if usb port plug flash disk"
+	;;
+esac

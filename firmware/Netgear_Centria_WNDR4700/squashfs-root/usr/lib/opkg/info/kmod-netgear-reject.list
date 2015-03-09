@@ -1,0 +1,2 @@
+/etc/modules.d/45-netgear-reject
+/lib/modules/2.6.32.11-wndr4700/ipt_NETGEAR_REJECT.ko

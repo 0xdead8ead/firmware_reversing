@@ -1,0 +1,14 @@
+Package: libblkid
+Version: 1.42-2
+Depends: 
+Provides: 
+Source: package/e2fsprogs
+Section: libs
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 50355
+Description:  The blkid library which allows system programs like fsck and mount to 
+ quickly and easily find block devices by filesystem UUID and LABEL.

@@ -1,0 +1,55 @@
+<% http_header("style/form.css", "/funcs.js", "/hdd.js") %>
+<% body_header("", "hdd_usr_setup.htm", "shname_add") %>
+
+<div class="page_title">$add_user</div>
+<div id="main" class="main_top_button"> 
+<% table_header() %>
+<script>
+<% userhdd_items_xss() %>
+ function loadvalue()
+ {
+ 
+ }
+ </script>
+ 
+<input type="hidden" name="duplicated_num" value=0>
+<input type="hidden" name="duplicated_shname">
+ 
+ $bluebar 
+<TR>
+	<TD nowrap>$ddns_username:</TD>
+	<TD nowrap>
+<!--	<input type="password" size="20" maxlength="32" name="sysOldPasswd" value="" onKeyPress="return getkey('ssid', event)"> -->
+	<input type="text" size="16" maxlength="60" name="sh_name" onKeyPress="return getkey('ssid', event)" value="" >
+	</TD>
+</TR>
+<TR>
+	<TD nowrap>$ddns_passwd:</TD>
+	<TD nowrap>
+<!--	<input type="password" maxLength="32" size="20" name="sysNewPasswd" onFocus="this.select();" onKeyPress="return getkey('ssid', event)"> -->
+	<input type="password" maxLength="32" size="20" name="hddNewPasswd" onFocus="this.select();" >
+	</TD>
+</TR>
+<TR>
+	<TD nowrap>$re_password:</TD> <!--no var for Re-enter password-->
+	<TD nowrap>
+<!--	<input type="password" maxLength="32" size="20" name="sysConfirmPasswd" onFocus="this.select();" onKeyPress="return getkey('ssid', event)"> -->
+	<input type="password" maxLength="32" size="20" name="hddConfirmPasswd" onFocus="this.select();" >
+	</TD>
+</TR>
+
+$bluebar
+<TR>
+	<TD nowrap colspan=2 align=center>
+	<input class="add_bt"  type="submit" value="$add_mark" name="Add" onClick="return hdd_user_add(document.forms[0],'add');">&nbsp;&nbsp;
+	<input class="cancel_bt" type='button' value='$cancel_mark' name="Cancel" onClick='location.href="hdd_usr_setup.htm";'>
+	</TD>
+</TR>  
+
+</TABLE>
+</div>
+<% help_box("0","_passwd") %>
+</FORM>
+</BODY>
+</HTML>
+

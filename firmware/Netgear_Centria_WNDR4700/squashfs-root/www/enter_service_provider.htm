@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<% hijack_title() %>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="style/hijack_style.css" />
+<link rel="stylesheet" type="text/css" href="style/hijack_02_genieHelp.css" />
+<script language="javascript" type="text/javascript" src="script/funcs.js"></script>
+<script language="javascript" type="text/javascript" src="script/hsdpa.js"></script>
+</head>
+
+<body onLoad="loadvalue();" bgcolor=#ffffff>
+<% form_submit("apply", "simcard_yes_or_not.htm", "other_isp") %>
+<script>
+var wan_cdma_username="<% cfg_get("wan_cdma_username") %>";
+var wan_cdma_password="<% cfg_get("wan_cdma_password") %>";
+var wan_cdma_access_num="<% cfg_get("wan_cdma_access_num") %>";
+var wan_cdma_apn="<% cfg_get("wan_cdma_apn") %>";
+var wan_cdma_pdp_type="<% cfg_get("wan_cdma_pdp_type") %>";
+var region_num = location.href.split("=")[1];
+
+function loadvalue()
+{
+	var cf=document.forms[0];
+	cf.hsdpa_username.value = wan_cdma_username;
+	cf.hsdpa_passwd.value = wan_cdma_password;
+	cf.access_num.selectedIndex = wan_cdma_access_num;
+	cf.hsdpa_apn.value = wan_cdma_apn;
+	cf.pdptype.selectedIndex = wan_cdma_pdp_type;
+
+	cf.hid_region.value = region_num;
+	cf.hid_isp.value = "Other";
+}
+</script>
+<input type="hidden" name="hid_region">
+<input type="hidden" name="hid_isp">
+<input type="hidden" name="hid_accnum">
+<input type="hidden" name="hid_pdp_type">
+<table width=100%>
+<tr><td nowrap colspan=2 align=center><h1>$detect_hsdpa_msg</h1></td></tr>
+$bluebar
+<br>
+<tr><td colspan=2>$enter_config_param</td></tr>
+<tr><td>&nbsp;</td></tr>
+<TR>
+	<TD nowrap><b>$basic_pppoe_login</b>
+	</TD>
+	<TD nowrap align=right>
+	<input type="text" name="hsdpa_username" maxLength="64" size="16" onKeyPress="return getkey('ssid', event)" value="none">
+	</TD>
+</TR>
+<TR>
+	<TD nowrap><b>$basic_pppoe_passwd</b>
+	</TD>
+	<TD nowrap align=right>
+	<input type="password" name="hsdpa_passwd" maxlength="64" size="16" onFocus="change_pppoe_password(this);" onKeyPress="return getkey('ssid', event)" value="none">
+	</TD>
+</TR>
+<TR>
+	<td nowrap><b>$access_number_3g</b></td>
+<TD nowrap align=right>
+	<select name="access_num" onChange="">
+		<option value="0">$access_num_type1</option>
+		<option value="1">$access_num_type2</option>
+		<option value="2">$access_num_type3</option>
+		<option value="3">$access_num_type4</option>
+		<option value="4">$access_num_type5</option>
+		<option value="5">$access_num_type6</option>
+		<option value="6">$access_num_type7</option>
+	</select></td></tr>
+<TR>
+	<TD nowrap><b>$apn_tag</b>
+	</TD>
+	<TD nowrap align=right>
+	<input type="text" name="hsdpa_apn" maxlength="64" size="16" onFocus="" onKeyPress="return getkey('ssid', event)" value="">
+	</TD>
+</TR>
+<TR>
+	<td nowrap><b>$pdp_type</b></td>
+<TD nowrap align=right>
+	<select name="pdptype" onChange="">
+		<option value="0">$pdp_type1</option>
+		<option value="1">$pdp_type2</option>
+		<option value="2">$pdp_type3</option>
+		<option value="3">$pdp_type4</option>
+	</select></td></tr>
+$bluebar
+<tr><td nowrap colspan=2 align=center>
+<input type="button" value="$quit_mark" onclick='location.href="WIZ_sel_3g_adsl.htm";'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="button" value="$next_mark" onclick='return set_other_isp()'>
+</td></tr>
+</table>
+</form></body></html>

@@ -1,0 +1,13 @@
+Package: libltdl
+Version: 1.5.26-1
+Depends: 
+Provides: 
+Source: package/libtool
+Section: libs
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 39020
+Description:  A generic dynamic object loading library

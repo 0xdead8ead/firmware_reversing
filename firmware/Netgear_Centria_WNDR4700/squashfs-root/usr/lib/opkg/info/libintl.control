@@ -1,0 +1,13 @@
+Package: libintl
+Version: 0.17-1
+Depends: 
+Provides: 
+Source: package/gettext
+Section: libs
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 43075
+Description:  GNU Internationalization library

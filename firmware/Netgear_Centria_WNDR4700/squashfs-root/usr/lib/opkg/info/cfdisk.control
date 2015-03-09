@@ -1,0 +1,13 @@
+Package: cfdisk
+Version: 2.13.0.1-4
+Depends: libncurses
+Provides: 
+Source: package/util-linux-ng
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 60344
+Description:  This package contains a utility for managing disk partition tables.

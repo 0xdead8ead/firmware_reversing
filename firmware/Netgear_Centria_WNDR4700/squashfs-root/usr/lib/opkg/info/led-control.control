@@ -1,0 +1,13 @@
+Package: led-control
+Version: 1
+Depends: 
+Provides: 
+Source: package/led-control
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 13940
+Description:  Update utility for LED control

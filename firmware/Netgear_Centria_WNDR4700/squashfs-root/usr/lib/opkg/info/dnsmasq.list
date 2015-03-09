@@ -1,0 +1,4 @@
+/etc/dnsmasq.conf
+/etc/init.d/dnsmasq
+/usr/sbin/dns-hijack
+/usr/sbin/dnsmasq

@@ -1,0 +1,13 @@
+Package: kmod-pptp-alg
+Version: 2.6.32-1
+Depends: kernel (=2.6.32-1)
+Provides: 
+Source: package/kmod-pptp-alg
+Section: kernel
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 48310
+Description:  PPTP ALG linux kernel module for 2.6.32

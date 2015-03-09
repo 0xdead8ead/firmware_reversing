@@ -1,0 +1,13 @@
+Package: zebra
+Version: 0.95a-1
+Depends: 
+Provides: 
+Source: package/zebra
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 418646
+Description:  Zebra is free software that manages various routing protocols

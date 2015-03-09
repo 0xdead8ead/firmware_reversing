@@ -1,0 +1,8 @@
+
+DECIMAL   	HEX       	DESCRIPTION
+-------------------------------------------------------------------------------------------------------------------
+0         	0x0       	DLOB firmware header, boot partition: "dev=/dev/mtdblock/1"
+112       	0x70      	LZMA compressed data, properties: 0x5D, dictionary size: 33554432 bytes, uncompressed size: 4632709 bytes
+1441904   	0x160070  	PackImg section delimiter tag, little endian size: 7374336 bytes; big endian size: 8810496 bytes
+1441936   	0x160090  	Squashfs filesystem, little endian, non-standard signature,  version 3.0, size: 8810069 bytes,  2413 inodes, blocksize: 65536 bytes, created: Tue Jun 18 23:26:27 2013 
+

@@ -1,0 +1,13 @@
+Package: libxml2
+Version: 2.7.2-2
+Depends: libpthread, zlib
+Provides: 
+Source: package/libxml2
+Section: libs
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 1046788
+Description:  A library for manipulating XML and HTML resources.

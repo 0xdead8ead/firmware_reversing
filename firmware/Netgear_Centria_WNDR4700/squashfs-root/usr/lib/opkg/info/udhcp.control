@@ -1,0 +1,13 @@
+Package: udhcp
+Version: 0.9.8-3
+Depends: 
+Provides: 
+Source: package/udhcp
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 78952
+Description:  This package contains udhcp Server and Client.

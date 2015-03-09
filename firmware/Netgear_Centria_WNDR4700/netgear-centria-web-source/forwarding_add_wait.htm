@@ -1,0 +1,13 @@
+<% start_netscan() %>
+
+<% http_header("/funcs.js") %>
+<BODY bgcolor=#ffffff>
+<script>
+if(top.forward_range_flag == 1 &&(top.is_ru_version==1 || top.is_pr_version==1))
+	document.write('<META http-equiv="refresh" content="6; url=forwarding_add_range.htm">');
+else
+	document.write('<META http-equiv="refresh" content="6; url=forwarding_add.htm">');
+</script>
+<div  align="center"><br /><br /><b>$wizard_pls_wait</b><br /><br /></div>
+<div class="waiting_img_div" align="center"><img src="image/wait30.gif" /></div></body></html>
+

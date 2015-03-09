@@ -1,0 +1,83 @@
+
+mknod /dev/mem c 1 1
+mknod /dev/kmem c 1 2
+mknod /dev/zero c 1 5
+mknod /dev/random c 1 8
+mknod /dev/urandom c 1 9
+mknod /dev/ram0 b 1 0
+
+mknod /dev/tty c 5 0
+mknod /dev/tty0 c 4 0
+mknod /dev/tty1 c 4 1
+mknod /dev/tty2 c 4 2
+mknod /dev/ttyS0 c 4 64
+mknod /dev/ttyS1 c 4 65
+mknod /dev/ttyS2 c 4 66
+
+mknod /dev/mtdblock0 b 31 0
+mknod /dev/mtdblock1 b 31 1
+mknod /dev/mtdblock2 b 31 2
+mknod /dev/mtdblock3 b 31 3
+mknod /dev/mtdblock4 b 31 4
+mknod /dev/mtdblock5 b 31 5
+mknod /dev/mtdblock6 b 31 6
+mknod /dev/mtdblock7 b 31 7
+mknod /dev/mtdblock8 b 31 8
+mknod /dev/mtdblock9 b 31 9
+mknod /dev/mtdblock10 b 31 10
+mknod /dev/mtdblock11 b 31 11
+mknod /dev/mtdblock12 b 31 12
+mknod /dev/caldata b 31 10
+
+mknod /dev/mtd0 c 90 0
+mknod /dev/mtd0ro c 90 1
+mknod /dev/mtd1 c 90 2
+mknod /dev/mtd1r0 c 90 3
+mknod /dev/mtd2 c 90 4
+mknod /dev/mtd2ro c 90 5
+mknod /dev/mtd3 c 90 6
+mknod /dev/mtd3ro c 90 7
+mknod /dev/mtd4 c 90 8
+mknod /dev/mtd4ro c 90 9
+mknod /dev/mtd5 c 90 10
+mknod /dev/mtd5ro c 90 11
+mknod /dev/mtd6 c 90 12
+mknod /dev/mtd6ro c 90 13
+mknod /dev/mtd7 c 90 14
+mknod /dev/mtd7ro c 90 15
+mknod /dev/mtd8 c 90 16
+mknod /dev/mtd8ro c 90 17
+mknod /dev/mtd9 c 90 18
+mknod /dev/mtd9ro c 90 19
+mknod /dev/mtd10 c 90 20
+mknod /dev/mtd10ro c 90 21
+mknod /dev/mtd11 c 90 22
+mknod /dev/mtd11ro c 90 23
+mknod /dev/mtd12 c 90 24
+mknod /dev/mtd12ro c 90 25
+
+mknod /dev/loop0 b 7 0
+mknod /dev/loop1 b 7 1
+
+mknod /dev/sda b 8 0
+mknod /dev/sda1 b 8 1
+mknod /dev/sda2 b 8 2
+mknod /dev/sda3 b 8 3
+mknod /dev/sda4 b 8 4
+mknod /dev/sda5 b 8 5
+mknod /dev/sda6 b 8 6
+mknod /dev/sda7 b 8 7
+mknod /dev/sda8 b 8 8
+mknod /dev/sda9 b 8 9
+mknod /dev/sda10 b 8 10
+mknod /dev/sda11 b 8 11
+mknod /dev/sda12 b 8 12
+mknod /dev/sda13 b 8 13
+mknod /dev/sda14 b 8 14
+mknod /dev/sda15 b 8 15
+
+mknod /dev/ptmx c 5 2
+mknod /dev/armem c 1 13
+mknod /dev/freset c 10 129
+mknod /dev/otp c 10 132
+mknod /dev/i2s c 253 0

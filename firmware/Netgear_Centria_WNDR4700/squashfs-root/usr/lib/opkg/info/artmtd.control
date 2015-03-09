@@ -1,0 +1,13 @@
+Package: artmtd
+Version: 1
+Depends: 
+Provides: 
+Source: package/artmtd
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 22960
+Description:  Read mac , wpspin, serialnumber and etc from art data

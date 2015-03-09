@@ -1,0 +1,216 @@
+#!/bin/sh
+
+SSDK="/usr/local/sbin/ssdk_sh"
+CONFIG="/bin/config"
+gui_region=$($CONFIG get GUI_Region)
+firmware_region=`cat /tmp/firmware_region`
+
+is_interface_exist()
+{
+	brctl show | awk '/br1/, /^$/' | grep $1 1>/dev/null
+
+	if [ $? = 0 ]; then
+		echo "1"
+	else
+		echo "0"
+	fi
+
+}
+
+restart_wireless(){
+        ifconfig $1 down
+        sleep 7
+        ifconfig $1 up
+}
+
+set_wireless_iptv()
+{
+        wl_1st_iptv="$($CONFIG get wan_brig_ssid1)"
+        wl_2nd_iptv="$($CONFIG get wan_brig_ssid2)"
+        wl_guest_iptv1="$($CONFIG get wan_brig_guest_ssid1)"
+        wl_guest_iptv2="$($CONFIG get wan_brig_guest_ssid2)"
+        wlg_guest_on="$($CONFIG get wlg1_endis_guestNet)"
+        wla_guest_on="$($CONFIG get wla1_endis_guestNet)"
+
+        #check if any wireless interface will be set as IPTV port
+        if [ "$wl_1st_iptv" = "1" -o "$wl_2nd_iptv" = "1" -o "$wl_guest_iptv1" = "1" -o "$wl_guest_iptv2" = "1" ]; then
+                if [ `is_interface_exist "br1"` = "0" ]; then
+                        brctl addbr br1
+                        brctl addif br1 eth0.1
+                        ifconfig br1 up
+                fi
+        fi
+
+        #if ath0 is to be set as IPTV port and ath0 has not benn added to br1, then add ath0 to br1
+        if [ "$wl_1st_iptv" = "1" ] && [ `is_interface_exist "ath0"` = "0" ]; then
+                brctl delif br0 ath0
+                brctl addif br1 ath0
+        elif [ "$wl_1st_iptv" = "0" ] && [ `is_interface_exist "ath0"` = "1" ]; then
+                brctl delif br1 ath0
+                brctl addif br0 ath0
+        fi
+
+        if [ "$wl_2nd_iptv" = "1" ] && [ `is_interface_exist "ath1"` = "0" ]; then
+                brctl delif br0 ath1
+                brctl addif br1 ath1
+        elif [ "$wl_2nd_iptv" = "0" ] && [ `is_interface_exist "ath1"` = "1" ]; then
+                brctl delif br1 ath1
+                brctl addif br0 ath1
+        fi
+
+        #if we only enable 5G Guest Network, now ath2 is 5G Gusest Network Interface.
+        if [ "$wlg_guest_on" = "0" -a "$wla_guest_on" = "1" ]; then
+                if [ "$wl_guest_iptv2" = "1" ] && [ `is_interface_exist "ath2"` = "0" ]; then
+                        brctl delif br0 ath2
+                        brctl addif br1 ath2
+                elif [ "$wl_guest_iptv2" = "0" ] && [ `is_interface_exist "ath2"` = "1" ]; then
+                        brctl delif br1 ath2
+                        brctl addif br0 ath2
+                fi
+        else
+                if [ "$wl_guest_iptv1" = "1" ] && [ `is_interface_exist "ath2"` = "0" ]; then
+                        brctl delif br0 ath2
+                        brctl addif br1 ath2
+                elif [ "$wl_guest_iptv1" = "0" ] && [ `is_interface_exist "ath2"` = "1" ]; then
+                        brctl delif br1 ath2
+                        brctl addif br0 ath2
+                fi
+
+                if [ "$wl_guest_iptv2" = "1" ] && [ `is_interface_exist "ath3"` = "0" ]; then
+                        brctl delif br0 ath3
+                        brctl addif br1 ath3
+                elif [ "$wl_guest_iptv2" = "0" ] && [ `is_interface_exist "ath3"` = "1" ]; then
+                        brctl delif br1 ath3
+                        brctl addif br0 ath3
+                fi
+        fi
+
+        if [ "$wl_1st_iptv" = "0" -a "$wl_2nd_iptv" = "0" -a "$wl_guest_iptv1" = "0" -a "$wl_guest_iptv2" = "0" ] &&
+           [ `is_interface_exist "br1"` = "1" ]; then
+                ifconfig br1 down
+                brctl delbr br1
+                ifconfig eth0.1 up
+        fi
+}
+
+set_wired_iptv() {
+	local mask=$1
+	local lanport=""
+	local wanport=""
+
+	# LAN PHY Port:    1 2 3 4
+	# LAN Pannel Port: 4 3 2 1
+	phy=4
+	while [ "$phy" -ge "1" ]; do
+		iswan=$(($mask % 2))
+		if [ "$iswan" -eq "1" ]; then
+			wanport="${wanport}"",$phy"
+			# WAN's VID=1
+			$SSDK portVlan defaultCVid set $phy 1
+		else
+			lanport="${lanport}"",$phy"
+			# LAN's VID=2
+			$SSDK portVlan defaultCVid set $phy 2
+		fi
+
+		mask=$(($mask / 2))
+		phy=$(($phy - 1))
+	done
+
+	sleep 1
+
+	$SSDK vlan entry append 2 2 "0${lanport}" 0 "${lanport}" default default default
+	$SSDK vlan entry append 1 1 "0${wanport},5" 0 "${wanport},5" default default default
+}
+
+start() {
+	echo "iptv start -_-!" > /dev/console
+	if [ "x$($CONFIG get ap_mode)" = "x1" ]; then
+		return 0
+	fi
+
+	local lan0_en=0
+        local lan1_en=0
+        local lan2_en=0
+        local lan3_en=0
+        local wifi0_en=0
+        local wifi0_guest_en=0
+        local wifi1_en=0
+        local wifi1_guest_en=0
+        local lan_ports=0
+        local iptv_port_enable=0
+
+        [ "$($CONFIG get wan_bri_lan1)" = "1" ] && lan0_en=1 lan_ports=$((lan_ports|1))
+        [ "$($CONFIG get wan_bri_lan2)" = "1" ] && lan1_en=1 lan_ports=$((lan_ports|2))
+        [ "$($CONFIG get wan_bri_lan3)" = "1" ] && lan2_en=1 lan_ports=$((lan_ports|4))
+        [ "$($CONFIG get wan_bri_lan4)" = "1" ] && lan3_en=1 lan_ports=$((lan_ports|8))
+        [ "$($CONFIG get wan_brig_ssid1)" = "1" ] && wifi0_en=1
+        [ "$($CONFIG get wan_brig_ssid2)" = "1" ] && wifi1_en=1
+        [ "$($CONFIG get wan_brig_guest_ssid1)" = "1" ] && wifi0_guest_en=1
+        [ "$($CONFIG get wan_brig_guest_ssid1)" = "1" ] && wifi1_guest_en=1
+
+        if [ $lan_ports -eq 0 -a $wifi0_en -eq 0 -a $wifi1_en -eq 0 -a $wifi0_guest_en -eq 0 -a $wifi1_guest_en -eq 0 ]; then
+                echo "No IPTV port is enabled!" > /dev/console
+                exit 0
+        fi
+
+	#board_region=`artmtd -r region | awk -F ": " 'NR==2 {print $2}'`
+	if [ "$firmware_region" = "" ] || [ "$firmware_region" = "WW" ];then
+		if [ "$gui_region" = "Russian" -o "$gui_region" = "Chinese" ];then
+			set_wired_iptv $($CONFIG get iptv_mask)
+			echo "set_wired_iptv $($CONFIG get iptv_mask)" > /dev/console
+			set_wireless_iptv
+		else
+			set_wired_iptv 0
+			echo "set_wired_iptv 0" > /dev/console
+		fi
+	elif [ "$firmware_region" = "RU" -o "$firmware_region" = "PR" ];then
+		set_wired_iptv $($CONFIG get iptv_mask)
+		echo "set_wired_iptv $($CONFIG get iptv_mask)" > /dev/console
+		set_wireless_iptv
+	else
+		set_wired_iptv 0
+		echo "set_wired_iptv 0" > /dev/console
+	fi
+	
+	# PHY link will be pulled low some seconds to force transition to reboot state
+	# and generating DHCP request and Discovery protocol and address refresh in the
+	# devices connected to the NETGEAR Local Area Network ports.
+	echo -n 8 > /proc/switch_phy
+
+	# Due to WNDR4700's WAN port is an interface, not bridge.
+	# So the wireless interface can't be bridged to WAN
+	# Who can tell me how to resolve it without changing the DUT's WAN ifname
+#	wl_1st_iptv="$(/bin/config get wan_brig_ssid1)"
+#	wl_1st_guest_iptv="$(/bin/config get wan_brig_guest_ssid1)"
+#	wl_2st_iptv="$(/bin/config get wan_brig_ssid2)"
+#	wl_2st_guest_iptv="$(/bin/config get wan_brig_guest_ssid2)"
+}
+
+stop() {
+	echo "iptv stop!!!" > /dev/console
+	set_wired_iptv 0
+	echo "set_wired_iptv 0" > /dev/console
+
+#	brctl delif br1 ath0
+#	brctl addif br0 ath0
+#	brctl delif br1 ath1
+#	brctl addif br0 ath1
+}
+
+restart() {
+	stop
+	start
+}
+
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		restart
+		;;
+esac

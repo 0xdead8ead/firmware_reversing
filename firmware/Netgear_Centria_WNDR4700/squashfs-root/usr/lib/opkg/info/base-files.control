@@ -1,0 +1,13 @@
+Package: base-files
+Version: 61-r24196
+Depends: 
+Provides: 
+Source: package/base-files
+Section: base
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 854125
+Description:  This package contains a base filesystem and system scripts for OpenWrt.

@@ -1,0 +1,42 @@
+<% http_header("style/form.css") %>
+<script>
+var language_list='<% cfg_get("lang_available") %>';
+var gui_region='<% cfg_get("GUI_Region") %>';
+
+function change_link()
+{
+	parent.location.href="/welcomeok.htm";
+}
+
+function loadvalue()
+{
+	form=document.forms[0];
+	var language_change_status="<% lang_change_status() %>";
+	if (language_change_status == "1")	// 1:No Internet Connection
+	{
+		setTimeout('parent.location.href="/welcomeok.htm";', 3*1000);
+	}	
+	else if (language_change_status == "2")	// 2:download failed
+	{
+		setTimeout('parent.location.href="/welcomeok.htm";', 3*1000);
+	}	
+	else 
+		parent.location.href="/welcomeok.htm";
+}
+</script>
+<BODY bgColor=#ffffff marginwidth="0" marginheight="0" onload="loadvalue();">
+<FORM method="get" target=topframe>
+<input type=hidden name=submit_flag value="change_language">
+<input type=hidden name=hidden_lang_avi>
+<input type=hidden name=browser_or_top>
+<TABLE width=100% border=0 cellpadding="0" cellspacing="3">
+<TR>
+	<TD colspan="2"><IMG height=12 src="/darkblue.gif" width="100%" border=1></TD>
+</TR>
+<TR>
+	<TD><H1>$wait_for_upgrad</H1></TD>
+</TR>
+</TABLE>
+</FORM>
+</BODY>
+</HTML>

@@ -1,0 +1,13 @@
+Package: samba
+Version: 3.0.24-1
+Depends: 
+Provides: 
+Source: package/samba
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 3979488
+Description:  SAMBA

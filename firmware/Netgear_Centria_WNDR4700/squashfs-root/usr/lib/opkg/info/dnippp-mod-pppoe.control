@@ -1,0 +1,13 @@
+Package: dnippp-mod-pppoe
+Version: 2.4.3-8
+Depends: dnippp, kmod-pppoe
+Provides: 
+Source: package/dnippp
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 43468
+Description:  This package contains a PPPoE (PPP over Ethernet) plugin for ppp.

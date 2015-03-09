@@ -1,0 +1,4 @@
+/usr/sbin/nmbd
+/usr/sbin/smbd
+/etc/modules.d/50-samba-mod
+/usr/bin/smbpasswd

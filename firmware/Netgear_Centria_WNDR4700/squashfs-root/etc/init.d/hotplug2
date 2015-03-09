@@ -1,0 +1,9 @@
+#!/bin/sh /etc/rc.common
+START=70
+
+boot() {
+	insmod /lib/ufsd/ufsd.ko
+	mkdir /tmp/mnt
+#	mount -t sysfs sysfs /sys
+	hotplug2 --persistent --coldplug &
+}

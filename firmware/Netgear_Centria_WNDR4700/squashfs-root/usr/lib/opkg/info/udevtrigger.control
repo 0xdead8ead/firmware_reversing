@@ -1,0 +1,13 @@
+Package: udevtrigger
+Version: 106-1
+Depends: 
+Provides: 
+Source: package/udev
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 26840
+Description:  Small utility to request kernel devices events for coldplug

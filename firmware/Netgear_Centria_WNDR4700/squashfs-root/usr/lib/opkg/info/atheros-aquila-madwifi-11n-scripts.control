@@ -1,0 +1,13 @@
+Package: atheros-aquila-madwifi-11n-scripts
+Version: 0-1
+Depends: 
+Provides: 
+Source: package/atheros-aquila-madwifi-11n-scripts
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 227778
+Description:  Atheros Madwifi 11n scripts for Aquila (LSDK 9.2.x)

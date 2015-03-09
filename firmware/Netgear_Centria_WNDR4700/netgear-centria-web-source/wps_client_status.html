@@ -1,0 +1,101 @@
+#!/bin/sh
+. /www/cgi-bin/functions.sh
+
+wps_status=$($nvram get wps_client)
+
+print_cgi_header
+print_http_header "/funcs.js"
+print_body_header "_wps" "" "wps_status"
+print_table_header "<script>document.write(wps_connect_head)</script>"
+cat <<EOF
+<script type="text/javascript">
+<!--
+var pchar = "|"; // progress char
+var maxchars = parseInt(parent.wps_client + 40);
+var delay_time = 1000; // msecs                                      // a 1-second interval
+var wps_status="$wps_status";
+wps_charcount = parseInt(parent.wps_charcount); 
+function loadvalue()
+{
+	var cf = document.forms[0];
+	cf.progress.value = makeStr(parent.wps_charcount,pchar);
+	updateProgress();
+}
+
+function makeStr(strsize, fillchar)
+{
+	var temp = "";
+	for (i=0; i < strsize ; i ++)
+		temp = temp + fillchar;
+	return temp;
+}
+function updateProgress()
+{
+	var cf = document.forms[0];
+
+	if (wps_charcount % 2 == 0)
+		cf.wps_icon.src = "/wps_icon_on.jpg"
+	else
+		cf.wps_icon.src = "/wps_icon_off.jpg"
+		
+	if (wps_charcount < maxchars && ((wps_charcount % 5) == 0) && wps_charcount != 0 )
+	{
+		parent.wps_charcount=wps_charcount+1;
+		location.href="wps_client_status.html"
+	}		
+	else if ( wps_charcount == maxchars )
+	{
+		//alert("timeout!wps_charcount="+wps_charcount);
+		location.href="wps_success.html";	
+	}	
+	else
+	{
+		//if ((wps_charcount/4) < maxchars) 
+		//{
+			wps_charcount ++;
+			
+				cf.progress.value = makeStr(wps_charcount,pchar);	
+				
+			setTimeout("updateProgress()",delay_time);
+		//}
+	}		
+}
+
+function updateMenu()
+{
+	top.enable_action=0;
+}
+    
+//-->
+</script>
+</head>
+<script> 
+if ( parent.wps_choice == 1 )
+{
+	str="<TR><TD>"+wps_client_pin+"<font size=4><b>";
+	str+=" "+parent.wps_pin_num;
+	str+="</b></font>.</TD></TR>";
+	document.write(str);
+}
+
+	document.write("<TR><TD>"+"Collecting the client's information..."+"</TD></TR>");	
+</script>
+<TR>
+    <td nowrap align="center"><IMG name="wps_icon" src="/wps_icon_on.jpg">&nbsp;&nbsp;&nbsp;<input type="text" name="progress" value="" style="color: blue" size="60"></td>
+</tr>
+	
+<TR>
+<TD ALIGN=center>
+<!--
+<INPUT TYPE="submit" NAME="Cancel" VALUE="Cancel" onClick="return stop1();">
+-->
+<script>document.write("<input type='button' name='Cancel' value='"+cancel_mark+"' onClick='location.href=\"wps_success.html\";'>")</script>
+</TD></TR>
+
+</table>
+<input type="hidden" name="stop" value="">
+<input type="hidden" name="pgbarcount" value="10">
+</form>
+</body>
+</html>
+EOF

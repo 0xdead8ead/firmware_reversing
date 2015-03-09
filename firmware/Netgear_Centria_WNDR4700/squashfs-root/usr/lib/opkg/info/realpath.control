@@ -1,0 +1,13 @@
+Package: realpath
+Version: 1
+Depends: 
+Provides: 
+Source: package/realpath
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 20196
+Description:  a tool for ReadSHARE Cloud

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+old_usbdisknum=$(cat /tmp/usbdisknum)
+new_usbdisknum=$(grep "Driver=usb-storage" /proc/bus/usb/devices | wc -l)
+
+if [ "x$old_usbdisknum" = "x" ]; then
+	old_usbdisknum=0
+fi
+
+if [ $new_usbdisknum -gt 1 -a $new_usbdisknum -gt $old_usbdisknum ]; then
+	ledcontrol -n usb_blink -c green -s on
+fi
+
+echo $new_usbdisknum > /tmp/usbdisknum

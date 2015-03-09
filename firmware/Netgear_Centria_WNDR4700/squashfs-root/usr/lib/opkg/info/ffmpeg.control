@@ -1,0 +1,13 @@
+Package: ffmpeg
+Version: 0.5-1
+Depends: 
+Provides: 
+Source: package/ffmpeg
+Section: libs
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 3387926
+Description:  ffmpeg

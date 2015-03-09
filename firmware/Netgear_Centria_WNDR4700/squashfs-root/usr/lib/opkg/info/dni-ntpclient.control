@@ -1,0 +1,13 @@
+Package: dni-ntpclient
+Version: 4
+Depends: 
+Provides: 
+Source: package/dni-ntpclient
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 43046
+Description:  The CGI interface

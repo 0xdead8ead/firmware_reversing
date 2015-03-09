@@ -1,0 +1,2 @@
+/etc/modules.d/46-dnshijack
+/lib/modules/2.6.32.11-wndr4700/ipt_dnshijack.ko

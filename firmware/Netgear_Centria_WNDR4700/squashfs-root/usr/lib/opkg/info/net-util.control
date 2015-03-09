@@ -1,0 +1,13 @@
+Package: net-util
+Version: 1-1
+Depends: 
+Provides: 
+Source: package/net-util
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 38972
+Description:  This package contains an utility for configuring Home Router.

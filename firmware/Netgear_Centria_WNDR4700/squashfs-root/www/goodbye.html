@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML><HEAD>
+<meta http-equiv=content-type content='text/html; charset=UTF-8'>
+<style type="text/css">
+body{ background: url(image/top-oneline.gif) repeat-x #e5e5e5; }
+#container{width: 820px; height: 100%; margin: auto; position: relative }
+#top{width: 820px; height: 97px;}
+#logo{ width: 300px; height: 38px; background: url(image/tops.gif) no-repeat -110px -54px; position: absolute; left : 0px; top: 5px;}
+#router-name{position:absolute; left: 0px; top: 40px; font-family: Arial; font-size: 18px; font-weight: Bold; color: #c0c0c0; text-align: left; }
+#centria-router-name{position:absolute; left: 88px; top: 42px; font-family: Arial; color: #ffffff; text-align: left; }
+#router-centria{ position:absolute; left: 0px; top: 42px; font-family:Arial; color: #ffffff; text-align: left; }
+#firm_version{ position:absolute; right: 0px; top: 30px; font-family: Arial; font-size: 14px; font-weight: Bold; color: #c0c0c0; text-align: right; }
+#middle{ margin-top:20px; width: 820px; height:350px; }
+p{ margin:50 100 50 100; font: 18px arial; color: #323232;}
+
+.footer{ height: 43px; float: left; width: 820px; color: #ffffff; no-repeat; overflow:hidden; position: relative }
+.footer_double{ height: 86px; float: left; width: 820px; color: #ffffff; background-repeat: no-repeat; position: relative }
+.footer b, .footer_double b{font: bold 16px arial;}
+.footer a, .footer_double a{ color: #ffffff; font: normal 11px arial; text-decoration: none;}
+
+.footer #support, .footer_double #support{ top: 0; left: 10px; line-height: 42px; position: absolute }
+.footer #search, .footer_double #search{ bottom: 10px; right: 10px; position: absolute}
+img { width: 100%; height: 100% }
+
+#footer #search .search_button{background: Transparent url(image/footer/search_button.gif ) no-repeat; border: none; width:39px; height:22px; font: bold 14px arial ; color: #ffffff; cursor: pointer; }
+#footer #search .search_button_middle{background: Transparent url(image/footer/search_button_middle.gif ) no-repeat; border: none; width:65px; height:22px; font: bold 14px arial ; color: #ffffff; cursor: pointer; }
+#footer #search .search_button_long{background: Transparent url(image/footer/search_button_long.gif ) no-repeat; border: none; width:95px; height:22px; font: bold 14px arial ; color: #ffffff; cursor: pointer; }
+
+</style>
+<script>
+function do_search()
+{
+        var key = document.forms[0].search.value.replace(/ /g,"%20");
+        var winoptions = "width=960,height=800,menubar=yes,scrollbars=yes,toolbar=yes,status=yes,location=yes,resizable=yes";
+        var url="http://kb.netgear.com/app/answers/list/kw/"+key;
+
+        window.open(url,null,winoptions);
+}
+
+function setFooterClass()
+{
+        var footer_div = top.document.getElementById("footer");
+        var content = footer_div.innerHTML.replace(/<\/?.+?>/g,"").replace(/[\r\n]/g, "").replace(/\s+/g, "");
+        var content_len = content.length;
+
+        if(content_len > 75)
+                footer_div.className = "footer_double";
+        else
+                footer_div.className = "footer";
+
+        var go_btn = top.document.getElementById("search_button");
+        content_len = go_btn.value.length;
+
+        if(content_len >= 7)
+                go_btn.className = go_btn.className + "_long";
+        else if(content_len >= 4)
+                go_btn.className = go_btn.className + "_middle";
+        else
+                go_btn.className = go_btn.className;
+}
+
+function detectEnter(type, e) //bug35984
+{
+	var keycode, event;
+	if (window.event)
+	{
+		event = window.event;
+		keycode = window.event.keyCode;
+	}
+	else if (e)
+	{
+		event = e;
+		keycode = e.which;
+	}
+	else
+		return true;
+	if(type == "num")
+	{
+		if(keycode==13)
+			do_search();
+	}
+	else
+		return false;
+}
+
+</script>
+</HEAD>
+
+<BODY onLoad="setFooterClass();" bgcolor=#ffffff>
+<form>
+<div id="container">
+<div id="top">
+<div id="logo"> </div>
+<% top_hardware_version() %>
+<div id="firm_version">$router_firmware_version<br /><% cat_file("/firmware_version") %></div>
+</div>
+
+<div id="middle" align="center">
+<br>
+<table  border=0 cellPadding=0 cellSpacing=2 height="70%" width="90%">
+<tbody>
+<tr>
+        <td>
+        <div align=center>
+        <b><font face="Arial, Helvetica, sans-serif" size=4>$logout_info</font></b>
+        <p><font face="Arial, Helvetica, sans-serif" size=4><B>$logout_goodbye</B></font></p>
+        </div>
+        </td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+<div id="footer" class="footer">
+	<img src="image/footer/footer.gif">
+<div id="support">
+        <b> $help_and_support</b> &nbsp;
+                <a target="_blank" href="http://downloadcenter.netgear.com/">$docu_head</a> |
+                <a target="_blank" href="http://support.netgear.com">$online_support</a> |
+                <a target="_blank" href="http://kb.netgear.com/app/answers/detail/a_id/12923">$router_faq</a>
+</div>
+<div id="search">
+        <b> $search_help </b>
+        <input type="text" name="search" value="$ent_srh_item" onkeypress="detectEnter('num',event);" onFocus="this.select();" >
+        <input id="search_button" class="search_button" type="button" name="dosearch" value="$go_mark" onClick="do_search();">
+</div>
+</div>
+
+
+</div>
+</form>
+</body>
+</html>
+

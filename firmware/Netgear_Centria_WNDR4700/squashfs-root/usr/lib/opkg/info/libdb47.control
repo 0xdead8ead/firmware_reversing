@@ -1,0 +1,13 @@
+Package: libdb47
+Version: 4.7.25.NC-4
+Depends: libxml2
+Provides: 
+Source: package/db47
+Section: libs
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 1097552
+Description:  Berkeley DB library (4.7).

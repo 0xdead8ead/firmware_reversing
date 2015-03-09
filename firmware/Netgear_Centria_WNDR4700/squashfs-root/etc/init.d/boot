@@ -1,0 +1,218 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006 OpenWrt.org
+
+START=10
+
+start() {
+	# Making special tmp directory using 1k blocksize since wndr4700 is getting around the 64k block size
+	#mkdir -p /etc/tmpfs
+	#limiting the size of /tmp
+	#mount -o size=8M,mode=0755 -t tmpfs tmpfs /etc/tmpfs
+	#dd if=/dev/zero of=/etc/tmpfs/tmpfs.img bs=1M count=7
+	# Using default blocksize of 1024
+	#yes | /sbin/mke2fs -m 0 /etc/tmpfs/tmpfs.img
+	#mount -o loop /etc/tmpfs/tmpfs.img /tmp
+
+	# start the page cache/kmem cache cleanup timer in the kernel
+	#echo 3 > /proc/sys/vm/drop_caches
+        mkdir -p /var/run
+        mkdir -p /var/log
+        mkdir -p /var/lock
+        mkdir -p /var/state
+        touch /var/log/wtmp
+        touch /var/log/lastlog
+        ln -sf /tmp/resolv.conf.auto /tmp/resolv.conf
+
+        # create /dev/root if it doesn't exist
+        [ -e /dev/root ] || {
+                ln -s 31:02 /dev/root
+        }
+
+	klogd
+	syslogd -m 0
+	
+	/bin/datalib
+
+	/sbin/printhosts
+	
+	/sbin/printnss
+
+        # let hostname = netbiosname
+        echo "$($CONFIG get netbiosname)" > /proc/sys/kernel/hostname
+
+	load_modules /etc/modules.d/*
+	
+	#When DUT boot up, disable ipv6 firstly. Will enable it in init process of init6
+	echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
+        #set ipv6 proc file
+        #/etc/net6conf/6proc start
+
+        # generate the firewall rule file after loading the configuration data.
+        /usr/sbin/net-wall rule
+
+        # start SIP ALG module
+        /sbin/cmd_sipalg
+
+	# set the voltage for fan
+	mknod /dev/i2c-0 c 89 0
+	/usr/sbin/set_fan_vol &
+
+        # indicate the system first boot for first log
+        /bin/config set syslog_up_first=0
+
+	mknod /dev/wndr4700_gpio c 240 0
+	# support TUN interface
+	mkdir /dev/net
+	mknod /dev/net/tun c 10 200
+	chmod 0700 /dev/net/tun
+
+        # Load Default QoS rules if needed.
+        qos_dft="$(/bin/config get qos_list_default)"
+        if [ "$qos_dft" = "1" ]; then
+                count=1
+                while :
+                do
+                        qos_rule="$(/bin/config get qos_dft_list$count)"
+                        if [ "x$qos_rule" = "x" ]; then
+                                break;
+                        fi
+                        /bin/config set qos_list$count="$qos_rule"
+
+                        count=`expr $count + 1`
+                done
+
+                count=`expr $count - 1`
+                echo "$count QoS default rules are Loaded!"
+
+                /bin/config set qos_list_default="0"
+                /bin/config commit
+	fi
+
+	# read serial number from flash to /tmp/Seria_Number
+	/sbin/artmtd -r mac
+	# read mac from flash to /tmp/lan_mac, /tmp/wan_mac and /tmp/wlan5g_mac
+	/sbin/artmtd -r sn
+	# read board hw id and model id
+	/sbin/artmtd -r hw_model_id
+	# read board region from flash to /tmp/firmware_region
+	/sbin/artmtd -r region
+	# Check the Board Data region and reset Time Zone & Wirless Region & GUI Region.
+	if [ "x$(/bin/config get board_region_default)" = "x1" ]; then
+		BOARD_REGION=`cat /tmp/firmware_region`
+		case "$BOARD_REGION" in
+			NA)
+				/bin/config set wla_country="10"
+                        	/bin/config set wl_country="10"
+				/bin/config set wla_hidden_channel="153"
+                        	/bin/config set region_flag="DISABLED"
+                        	/bin/config set ntp_server="GMT+8"
+                        	/bin/config set ntpserver_select="GMT+8"
+                        	/bin/config set ntp_hidden_select="4"
+                        	/bin/config set time_zone="GMT+8"
+                        	/bin/config set email_ntpserver="GMT+8"
+				;;
+			GR)
+				/bin/config set wla_country="4"
+                        	/bin/config set wl_country="4"
+                        	/bin/config set ntp_server="GMT-1"
+                        	/bin/config set ntpserver_select="GMT-1"
+                        	/bin/config set ntp_hidden_select="18"
+                        	/bin/config set time_zone="GMT-1"
+                        	/bin/config set email_ntpserver="GMT-1"
+				;;
+			PR)
+				/bin/config set wla_country="11"
+                        	/bin/config set wl_country="11"
+                        	/bin/config set ntp_server="GMT-8"
+                        	/bin/config set ntpserver_select="GMT-8"
+                        	/bin/config set ntp_hidden_select="32"
+                        	/bin/config set time_zone="GMT-8"
+                        	/bin/config set email_ntpserver="GMT-8"
+				;;
+			RU)
+				/bin/config set wla_country="19"
+                        	/bin/config set wl_country="19"
+                        	/bin/config set ntp_server="GMT-4"
+                        	/bin/config set ntpserver_select="GMT-4"
+                        	/bin/config set ntp_hidden_select="26"
+                        	/bin/config set time_zone="GMT-4"
+                        	/bin/config set email_ntpserver="GMT-4"
+				;;
+			BZ)
+				/bin/config set wla_country="9"
+                        	/bin/config set wl_country="9"
+                        	/bin/config set ntp_server="GMT+3"
+                        	/bin/config set ntpserver_select="GMT+3"
+                        	/bin/config set ntp_hidden_select="13"
+                        	/bin/config set time_zone="GMT+3"
+                        	/bin/config set email_ntpserver="GMT+3"
+				;;
+			IN)
+				/bin/config set wla_country="12"
+                        	/bin/config set wl_country="12"
+                        	/bin/config set ntp_server="GMT-5:30"
+                        	/bin/config set ntpserver_select="GMT-5:30"
+                        	/bin/config set ntp_hidden_select="29"
+                        	/bin/config set time_zone="GMT-5:30"
+                        	/bin/config set email_ntpserver="GMT-5:30"
+				;;
+			KO)
+				/bin/config set wla_country="7"
+                        	/bin/config set wl_country="7"
+                        	/bin/config set ntp_server="GMT-9"
+                        	/bin/config set ntpserver_select="GMT-9"
+                        	/bin/config set ntp_hidden_select="34"
+                        	/bin/config set time_zone="GMT-9"
+                        	/bin/config set email_ntpserver="GMT-9"
+				;;
+			JP)
+				/bin/config set wla_country="6"
+                        	/bin/config set wl_country="6"
+                        	/bin/config set ntp_server="GMT-9"
+                        	/bin/config set ntpserver_select="GMT-9"
+                        	/bin/config set ntp_hidden_select="34"
+                        	/bin/config set time_zone="GMT-9"
+                        	/bin/config set email_ntpserver="GMT-9"
+				;;
+			AU)
+				/bin/config set wla_country="2"
+                        	/bin/config set wl_country="2"
+                        	/bin/config set ntp_server="GMT-10"
+                        	/bin/config set ntpserver_select="GMT-10"
+                        	/bin/config set ntp_hidden_select="35"
+                        	/bin/config set time_zone="GMT-10"
+                        	/bin/config set email_ntpserver="GMT-10"
+		esac
+
+		/bin/config set board_region_default="0"
+		/bin/config commit
+	fi
+
+	if [ "x$(/bin/config get default_ssphrase)" = "x1" ]; then
+		/sbin/artmtd -r ssid
+		/sbin/artmtd -r passphrase
+
+		if [ -s /tmp/ssid-setted ] && [ -s /tmp/passphrase-setted ]; then
+			id_set=$(awk '{print $1}' /tmp/ssid-setted)
+			ps_set=$(awk '{print $1}' /tmp/passphrase-setted)
+
+			/bin/config set wl_ssid="$id_set"
+			/bin/config set wla_ssid="$id_set-5G"
+			/bin/config set wl_wpa2_psk="$ps_set"
+			/bin/config set wla_wpa2_psk="$ps_set"
+			/bin/config set wl_sectype="4"
+			/bin/config set wla_sectype="4"
+			/bin/config set wps_status="5"
+			/bin/config set wla_wps_status="5"
+
+			# set SSID of guest netwroks according to Home Router GUI Redesign Specification Rev10 section 6.3
+			/bin/config set wlg1_ssid="NETGEAR-Guest"
+			/bin/config set wla1_ssid="NETGEAR-5G-Guest"
+		fi
+
+		/bin/config set default_ssphrase="0"
+		/bin/config commit
+	fi
+	# Start ipmac binding
+	/sbin/ip_mac start
+}

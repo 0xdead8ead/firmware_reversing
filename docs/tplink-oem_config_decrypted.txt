@@ -1,0 +1,95 @@
+oem_model_decrypted.conf
+-------------------------
+
+Picked this gem out of memory..
+
+
+
+/* Product id and product version */
+PRODUCT_ID = 0x10430002
+PRODUCT_VERSION\t= 0x00000001
+
+COMPANY_NAME = TP-LINK TECHNOLOGIES CO., LTD.
+HARDWARE_VERSION = WR1043 v2
+ROUTER_SOFTWARE_VER = 0x1
+HTTP_BASIC_REALM_WEB = TP-LINK Wireless N Gigabit Router WR10"
+43ND
+
+/* Device Information provided by UPnP 
+ * @device_name: Device Name (Bual Band 29 byte, or 32 byte)
+ * @manufacturer: Manufacturer (0..64 byte)
+ * @model_name: Model Name (0..32 byte)
+ * @model_number: Model Number (0..32 byte)
+ * @serial_number: Serial Number (0..32 byte)
+ */
+DEV_MANUFACTURER = TP-LINK
+DEV_MODEL_NAME = TL-WR1043
+DEV_MODOL_VER = 2.0
+DEV_NAME = Wireless Router TL-WR1043
+DEV_MANUFACTURER_URL = http://www.tp-link.com
+
+LANGUAGE = EN
+WAN_STATIC_IP_IF_NAME = eth0.2
+LAN_FACT_IF_NAME = eth0.1
+
+/* wireless parameter */
+WIRELESS_SSID_PREFIX = TP-LINK
+WIRELESS_SHOW_REGION = 1
+/* usa */
+WIRELESS_DEFAULT_REGION = 101
+
+/* disable 5G */
+WIRELESS_ENABLE_5G = 0
+
+/* Features */
+INCLUDE_DDNS = 1
+INCLUDE_DYN_DDNS = 1
+INCLUDE_NOIP_DDNS = 1
+INCLUDE_CMX_DDNS = 1
+INCLUDE_NAS = 1
+INCLUDE_NAT = 1
+INCLUDE_USBIP = 1
+
+/* 0: single usb port; 1: two usb port with usb hub 2: two us"
+b host port */
+USB_TYPE = 0
+
+/* use vlan dev to identify lan/wan */
+INCLUDE_VLAN_DEV_CONFIG = 1
+/* Vlan tag mode
+ * 1 RU Vlan
+ * 2 Malaysia Vlan
+ * 3 TW Vlan
+ * 4 Singapore Vlan
+ */
+INCLUDE_LAN_MODE_VLANTAG = 0
+
+/* mux the Rst&Qss Button */
+MULTI_USE_RESET_BUTTON = 1
+INCLUDE_WIFI_RADIO_BUTTON = 1
+
+/* include domain name login */
+INCLUDE_DOMAIN_NAME_LOGIN = 1;
+
+/* include domain name login */
+INCLUDE_SPEED_BOOST = 1;
+
+/* system tools */
+SYS_UPGRADE_TIME = 45
+SYS_REBOOT_TIME = 45
+DEFAULT_TIMEZONE = 480
+
+/* switch speed in kbps */
+SWITCH_MAX_SPEED = 1000000
+
+HTML_CHARSET = utf-8
+
+
+SYS_SOFTWARE_REVISION = 0x55aa0311
+
+/* UC version, if need change default uc, please plus 1 */
+SYS_USRCFG_VERSION = 0x0002
+SYS_SOFTWARE_REVISION_MINOR = 0x26
+
+BUILD_TIME = 55867
+BUILD_DATE = 06/13/14

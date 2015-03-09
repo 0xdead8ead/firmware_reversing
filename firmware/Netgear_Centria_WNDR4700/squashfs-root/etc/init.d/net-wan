@@ -1,0 +1,423 @@
+#!/bin/sh /etc/rc.common
+START=20
+
+FIREWALL="/www/cgi-bin/firewall.sh"
+
+wan_ipv6_type=`$CONFIG get ipv6_type`
+ipv6_restarted=0
+
+setup_interface_static_mode() {
+	local mtu
+	mtu=$($CONFIG get wan_dhcp_mtu)
+
+	# For IPv6 Ready Log test, fixed ip setting do not enable radvd and dhcpv6s
+	local wan6_type=`$CONFIG get ipv6_type`
+	local logo_test=`$CONFIG get endis_ipv6_logo_test`
+	if [ "x$logo_test" = "x1" -a "x$wan6_type" = "xfixed" ]; then
+		ifconfig $WAN_IF mtu ${mtu:-1500}
+	else
+		ifconfig $WAN_IF down
+		ifconfig $WAN_IF mtu ${mtu:-1500}
+		ifconfig $WAN_IF up
+	fi
+
+	ifconfig $WAN_IF $($CONFIG get wan_ipaddr) netmask $($CONFIG get wan_netmask)
+	route add default gw $($CONFIG get wan_gateway)
+
+	$FIREWALL restart
+
+	# static route & ripd
+	/sbin/cmdroute stop
+	/usr/bin/killall -SIGINT ripd
+	/sbin/cmdroute start
+	/usr/sbin/ripd
+	/sbin/cmdigmp restart
+
+	mkdir -p /tmp/traffic_meter
+	#/sbin/cmd_traffic_meter config_update
+	# if IP address re-assigned, we will check qos bandwidth.
+	local qos_enable=`$CONFIG get qos_endis_on`
+	local qos_bandwidth_enable=`$CONFIG get qos_threshold`
+	local qos_bandwidth_type=`$CONFIG get qos_bandwidth_type`
+	if [ "x$qos_enable" = "x1" -a "x$qos_bandwidth_enable" = "x1" ]; then
+		if [ "x$qos_bandwidth_type" = "x1" ]; then
+			/etc/bandcheck/band-check &
+		fi
+	fi
+	/sbin/ledcontrol -n wan -c green -s on
+}
+
+setup_interface_dhcp(){
+    local mtu
+
+    mtu=$($CONFIG get wan_dhcp_mtu)
+
+    # For IPv6 Ready Log test, fixed ip setting do not enable radvd and dhcpv6s
+    local wan6_type=`$CONFIG get ipv6_type`
+    local logo_test=`$CONFIG get endis_ipv6_logo_test`
+    if [ "x$logo_test" = "x1" -a "x$wan6_type" = "xfixed" ]; then
+	ifconfig $WAN_IF mtu ${mtu:-1500}
+    else
+	ifconfig $WAN_IF down
+	ifconfig $WAN_IF mtu ${mtu:-1500}
+	ifconfig $WAN_IF up
+    fi
+
+
+    if [ "x$($CONFIG get wan_domain)" = "x" ];then
+	udhcpc -b -i $WAN_IF -h "$($CONFIG get wan_hostname)" -r $($CONFIG get wan_dhcp_ipaddr) &
+    else
+	udhcpc -b -i $WAN_IF -h "$($CONFIG get wan_hostname)" -r $($CONFIG get wan_dhcp_ipaddr) -d $($CONFIG get wan_domain) &
+    fi
+
+    
+    mkdir -p /tmp/traffic_meter
+    #/sbin/cmd_traffic_meter config_update
+}
+
+setup_wan_mac() {
+    local mac
+
+    mac="wan_factory_mac"
+    if [ "$1" = "dhcp" -o "$1" = "static" ]; then
+	value=$($CONFIG get wan_ether_mac_assign)
+
+	if [ "$value" = "1" ]; then
+	    mac="wan_remote_mac"
+	elif [ "$value" = "2" ]; then
+	    mac="wan_ether_this_mac"
+	fi
+    elif [ "$1" = "pptp" ]; then
+	value=$($CONFIG get wan_pptp_mac_assign)
+
+	if [ "$value" = "1" ]; then
+	    mac="wan_remote_mac"
+	elif [ "$value" = "2" ]; then
+	    mac="wan_pptp_this_mac"
+	fi
+    elif [ "$1" = "l2tp" ]; then
+    	value=$($CONFIG get wan_l2tp_mac_assign)
+
+	if [ "$value" = "1" ]; then
+	    mac="wan_remote_mac"
+	elif [ "$value" = "2" ]; then
+	    mac="wan_l2tp_this_mac"
+	fi
+    elif [ "$1" = "bigpond" ]; then
+	value=$($CONFIG get wan_bpa_mac_assign)
+
+	if [ "$value" = "1" ]; then
+	    mac="wan_remote_mac"
+	elif [ "$value" = "2" ]; then
+	    mac="wan_bpa_this_mac"
+	fi
+    elif [ "$1" = "pppoe" ]; then
+	value=$($CONFIG get wan_pppoe_mac_assign)
+
+	if [ "$value" = "1" ]; then
+	    mac="wan_remote_mac"
+	elif [ "$value" = "2" ]; then
+	    mac="wan_pppoe_this_mac"
+	fi
+    fi
+
+    # lower --> upper
+    mac_value=`echo $($CONFIG get $mac) | awk '{ print toupper($1)}'`
+
+    local mac_oldvalue=`ifconfig $WAN_IF | grep HWaddr | awk '{print $5}'`
+    if [ "x$mac_value" != "x$mac_oldvalue" ]; then
+	ifconfig $WAN_IF down
+	ifconfig $WAN_IF hw ether $mac_value
+	ifconfig $WAN_IF up
+    fi
+
+    sleep 2
+    # For IPv6 Ready Log test, fixed ip setting do not enable radvd and dhcpv6s
+    local wan6_type=`$CONFIG get ipv6_type`
+    local logo_test=`$CONFIG get endis_ipv6_logo_test`
+    if [ "x$logo_test" = "x1" -a "x$wan6_type" = "xfixed" ]; then
+	    /etc/net6conf/6fixed wan
+    fi
+
+}
+
+set_dst_flag() {
+    $CONFIG set dstflag=0
+    $CONFIG commit
+}
+
+attach_dni_qos_if_not_attached()
+{
+    # if dni-qos package is not installed, return 1
+    type dni_qos >/dev/null 2>&1 || return 1
+
+    # if dni-qos has attached to a NIF, return 2
+    dni_qos >/dev/null 2>&1 && return 2
+
+    # $WAN_IF is a VLAN NIF, the default txqueuelen is 0.
+    # it should be assigned a reasonable value
+    ip link set $WAN_IF txqueuelen 1000
+
+    # attach dni_qos to $WAN_IF
+    dni_qos --dni_qos_if $WAN_IF
+}
+
+start() {
+    local ns_flag=0
+    local proto=$($CONFIG get wan_proto)
+
+    # with ap mode, exit
+    if [ "$($CONFIG get ap_mode)" = "1" ]; then
+	    exit 1
+    fi
+
+    /sbin/ledcontrol -n wan -c amber -s on
+    
+    if [ ! -f /tmp/wan_mac ]; then
+	echo `ifconfig eth0 | grep HWaddr | awk -F' ' '{print $5}' | cut -b 1-11`:`cat /proc/uptime | awk -F' ' '{print $1}' | awk -F. '{print $2}'`:`cat /proc/uptime | awk -F. '{print $3}'` > /tmp/wan_mac
+    fi
+    wan_default_mac=$(cat /tmp/wan_mac)
+    $CONFIG set wan_factory_mac="$wan_default_mac"
+    echo "NET-WAN: Default WAN MAC is : $wan_default_mac"
+
+    setup_wan_mac $proto
+
+    ifconfig $WAN_IF up
+
+    # Bring up the wan interface first time when sytem is Rebooted, it needs to wait 
+    # for a moment after executing the command `ifconfig $WAN_IF up`, then `$WAN_IF`
+    # PHY is up. 3 seconds MAY be acceptable, and it works.
+    # If not wait, the `udhcpc` CAN'T obtain IP address in its selecting time.
+    sleep 5
+
+    attach_dni_qos_if_not_attached  
+    
+    #start qos
+    /sbin/qos.sh start
+
+    include /lib/network
+
+    [ "x$1" = "xmanually" ] && echo "********* The net-wan command is called manually!!! *********"
+
+    case "$proto" in
+	pppoe)
+	. /lib/network/ppp.sh
+	    # Setup WAN Ethernet interface IP address
+	    if [ "x$($CONFIG get GUI_Region)" = "xRussian" ]; then
+		if [ "$($CONFIG get wan_pppoe_intranet_wan_assign)" = "0" ]; then
+			# Confiure the PPP parameters firstly, then started PPPD by UDHCPC
+			setup_interface_ppp $1
+			udhcpc -b -i $WAN_IF
+	    	else
+			# Configure the interface address, then started PPPD in `setup_interface_ppp`
+			netmask=$($CONFIG get wan_pppoe_intranet_mask)
+			if [ "x$netmask" != "x" -a "x$netmask" != "x0.0.0.0" -a "x$netmask" != "x255.255.255.255" ]; then
+				ifconfig $WAN_IF $($CONFIG get wan_pppoe_intranet_ip) netmask $netmask
+			else
+				ifconfig $WAN_IF $($CONFIG get wan_pppoe_intranet_ip)
+			fi
+			setup_interface_ppp $1
+	    	fi
+	    else
+		setup_interface_ppp $1
+	    fi
+	    [ "$($CONFIG get wan_pppoe_dns_assign)" = "1" ] && ns_flag=1
+	;;
+	l2tp)
+	. /lib/network/ppp.sh
+	    # Setup WAN Ethernet interface IP address
+	    if [ "$($CONFIG get wan_l2tp_wan_assign)" = "0" ]; then
+		# Confiure the PPP parameters firstly, then started PPPD by UDHCPC
+		setup_interface_ppp $1
+		udhcpc -b -i $WAN_IF
+	    else
+		# Configure the interface address, then started PPPD in `setup_interface_ppp`
+		l2tp_netmask=$($CONFIG get wan_l2tp_eth_mask)
+		if [ "x$l2tp_netmask" != "x" -a "x$l2tp_netmask" != "x0.0.0.0" -a "x$l2tp_netmask" != "x255.255.255.255" ]; then
+		    ifconfig $WAN_IF $($CONFIG get wan_l2tp_local_ip) netmask $l2tp_netmask
+		else
+		    ifconfig $WAN_IF $($CONFIG get wan_l2tp_local_ip)
+		fi
+
+		setup_interface_ppp $1
+	    fi
+	    [ "$($CONFIG get wan_l2tp_dns_assign)" = "1" ] && ns_flag=1
+	;;
+	pptp)
+	. /lib/network/ppp.sh
+	    # Setup WAN Ethernet interface IP address
+	    if [ "$($CONFIG get wan_pptp_wan_assign)" = "0" ]; then
+	        # Confiure the PPP parameters firstly, then started PPPD by UDHCPC
+	        setup_interface_ppp $1
+		udhcpc -b -i $WAN_IF
+	    else
+	        # Configure the interface address, then started PPPD in `setup_interface_ppp`
+		pptp_netmask=$($CONFIG get wan_pptp_eth_mask)
+		if [ "x$pptp_netmask" != "x" -a "x$pptp_netmask" != "x0.0.0.0" -a "x$pptp_netmask" != "x255.255.255.255" ]; then
+			ifconfig $WAN_IF $($CONFIG get wan_pptp_local_ip) netmask $pptp_netmask
+		else
+			ifconfig $WAN_IF $($CONFIG get wan_pptp_local_ip)
+		fi
+		setup_interface_ppp $1
+	    fi
+	    [ "$($CONFIG get wan_pptp_dns_assign)" = "1" ] && ns_flag=1
+	;;
+     	static)
+	    setup_interface_static_mode
+	    ns_flag=1
+	    # start 6to4 when ipv4 wan type is changed.
+	    local ipv6_wantype=$($CONFIG get ipv6_type)
+	    if [ "x$ipv6_wantype" = "x6to4" ]; then
+		/etc/net6conf/net6conf restart
+	    fi
+	    /etc/init.d/leafp2p.sh start
+	;;
+	bigpond)
+	    #calling package/bpalogin/files/bigpond.sh
+	    setup_interface_bigpond $1
+	    [ "$($CONFIG get wan_bpa_dns_assign)" = "1" ] && ns_flag=1
+	;;
+	mulpppoe1)
+	    #calling package/ppp-nas/files/mulpppoe.sh
+	    setup_interface_mulpppoe
+	    [ "$($CONFIG get wan_mulpppoe1_dns_assign)" = "1" ] && ns_flag=1 
+	;;
+	*)
+	    setup_interface_dhcp
+	    [ "$($CONFIG get wan_ether_dns_assign)" = "1" ] && ns_flag=1
+        ;;
+   esac
+
+   if [ "$ns_flag" = "1" ]; then
+       echo "nameserver $($CONFIG get wan_ether_dns1)" > /tmp/resolv.conf
+       echo "nameserver $($CONFIG get wan_ether_dns2)" >> /tmp/resolv.conf
+       if [ "$proto" = "dhcp" -o "$proto" = "static" ]; then
+		echo "nameserver $($CONFIG get wan_ether_dns3)" >> /tmp/resolv.conf
+       fi
+
+   fi
+
+   if [ "$($CONFIG get setup_process)" = "1" ]; then
+
+	   if [ "$proto" = "pppoe" -o "$proto" = "pptp" ];then
+		   ping -c 8 10.112.112.112
+	   fi
+
+	   $CONFIG set setup_process=0
+
+   fi
+
+   # Start NTP
+   killall ntpclient
+   sleep 1
+   if [ "$($CONFIG get endis_ntp)" = "1" ]; then
+	#ntpclient -h "$($CONFIG get ntpserver1)" -b "second_server=$($CONFIG get ntpserver2)" -i 15 -m 60 -p 123 -s
+	/usr/sbin/ntpclient
+   fi
+
+   # Restart UPnP
+   if [ -f "/tmp/bootdone" ]; then
+   	/sbin/cmdupnp restart
+   fi
+
+   # Restart DDNS
+   /sbin/cmd_ddns restart
+
+   #restart DNS
+   if [ -f "/tmp/bootdone" ]; then
+   	/etc/init.d/dnsmasq stop
+   	/etc/init.d/dnsmasq start
+   fi
+
+   #restart crond
+   killall -9 crond
+   crond -c /tmp/etc/crontabs -T "$($CONFIG get time_zone)"
+
+   #fix bug[19564]
+   $CONFIG set traffic_disable_wan=0
+
+   if [ -f "/tmp/bootdone" -a "$wan_ipv6_type" != "disabled" -a "$ipv6_restarted" = "0" ]; then
+        /etc/net6conf/net6conf restart
+   fi
+
+   # Ready Share Remote: if we have successfully registered, we must start the module
+   local SHARE_LOGIN=$(config get leafp2p_remote_login)
+   [ ! -z ${SHARE_LOGIN} ] && /etc/init.d/leafp2p.sh start
+}
+
+stop() {
+	#/etc/init.d/dnsmasq stop
+
+	# Stop static route
+	/sbin/cmdroute stop
+
+	/usr/bin/killall -SIGINT ripd
+
+	# Shutdown and Kill all possible tasks
+	killall ntpclient
+	killall bpalogin
+
+	# Because the ipv6 pppoe may be connecting.
+	local ipv4_pppd=`ps | grep "pppd call dial-provider updetach" | grep -v "grep" |awk '{print $1}'`
+	if [ "x$ipv4_pppd" != "x" ]; then
+		/bin/kill -SIGHUP $ipv4_pppd
+		/bin/kill $ipv4_pppd
+	fi
+
+	killall -SIGUSR2 udhcpc
+	killall udhcpc
+	killall udhcpc
+	#killall ip-up
+	#killall ip-down
+
+	sleep 1
+
+	/sbin/rmmod pptp
+	/sbin/rmmod l2tp
+
+	if ! ps | grep "pppd call" | grep -v "grep" >&- 2>&- ; then
+		/sbin/rmmod pppoe
+		/sbin/rmmod pppox
+
+		sleep 2
+
+		/sbin/rmmod ppp_generic
+		/sbin/rmmod slhc
+	fi
+
+	ifconfig $WAN_IF 0.0.0.0
+	ifconfig $WAN_IF mtu 1500
+
+	/sbin/ledcontrol -n wan -c amber -s on
+
+	# stop the Ready Share Remote
+	/etc/init.d/leafp2p.sh stop
+}
+
+restart() {
+	# the crontab will refreshed when the wan is restart
+	/sbin/cmdsched
+# fix the bug 23224[Q4: Automatic Internet connection reset ]If the Connection Mode set to Always On, 
+# after the disconnection, the router will connect to Internet
+# automatically again. If the Connection Mode set to Manually Connect and the Internet connection is
+# ON at that time, after the disconnection, the router will connect to Internet automatically again
+# If the Connection Mode set to Manually Connect and the Internet connection is OFF at that time, we
+# do not need to do anything for this case.
+	tmp=$(awk '{print $1}' /tmp/ppp/ppp0-status)
+# we use $2 to distinguish the command between the connect in routerstatus and crontable
+	if [ "$tmp" != "1" -a "x$1" = "xmanually" -a "x$2" = "xcron" -a "$($CONFIG get bas_auto_conn_flag)" = "1" -a "$($CONFIG get internet_type)" = "0" ]; then
+		exit 0
+	elif [ "$tmp" = "1" -a "$($CONFIG get wan_endis_dod)" = "2" ]; then
+# if the command is from cron, means that the set time is arriving, we should show a log
+		if [ "x$2" = "xcron" ]; then
+			logger "[Internet disconnected] 24hr automatic disconnection."
+		fi
+		stop
+		set_dst_flag
+		start $1
+	else
+	stop
+	set_dst_flag
+	start $1
+	fi
+}

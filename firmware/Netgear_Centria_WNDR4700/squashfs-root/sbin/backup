@@ -1,0 +1,99 @@
+#!/bin/sh
+
+PID_file=/var/run/backup_button.pid
+PRINT_OUT=/dev/null
+test -f $PID_file && {
+echo "Last backup process is not completed yet, ignore this time of backup"
+exit 0
+}
+
+config=/bin/config
+card_dev_name=`$config get sd_card_diskname`
+sata_diskname=`$config get sata_diskname`
+sata_first_partition=`$config get sata_partition1`
+card_partition_id=1
+
+echo "$$" > $PID_file
+
+#$1: card; $2: sata
+check_capacity(){
+	card_content=`du -sk $1` 
+	sata_available=`df -k $2 | awk '{if($4=="Available") next; print $4}'` 
+	if [ $card_content -ge $stat_available ]; then
+		echo "Sorry, there is not enough space on Internal SATA disk, please delet some files in SATA disk and try again"
+		rm -f $PID_file
+		exit 0
+	fi
+}
+
+count_partition(){
+	count=-1
+	cat /proc/partitions | grep "$1" | awk '{print $4}' > /tmp/card_device_info
+	if [ $? == 0 ]; then
+		while read LINE
+		do
+			let count=$count+1
+		done < /tmp/card_device_info
+		rm /tmp/card_device_info
+		echo "$count"
+	else
+		echo 1
+	fi
+}
+
+# Do backup here
+echo "Start backup..."
+
+if [ "x" = "x$sata_diskname" ]; then
+        echo "Sorry! Internal SATA disk is not found, please power off and insert SATA disk, adn then power on"
+	rm -f $PID_file
+	logger "[One Touch Backup] The backup is failed, "
+        exit 0
+fi
+
+/sbin/fdisk -l /dev/"$card_dev_name" 2>&1 | grep "/dev/sd" 2>&1 > $PRINT_OUT 
+if [ $? -ne 0 -o "x" = "x$card_dev_name" ]; then
+        echo "Sorry! card storage is not found, please insert card"
+	rm -f $PID_file
+	logger "[One Touch Backup] The backup is failed, "
+        exit 0
+fi
+
+copy_times=0
+card_num=`count_partition $card_dev_name`
+/usr/bin/killall check_HDD_capacity
+time_zone=`$config get time_zone`
+echo "$time_zone" > /tmp/time_zone
+sleep 1
+date=`date +%F-%H-%M-%S`
+while [ $card_partition_id -le $card_num ]; do
+	cd /mnt/"$card_dev_name""$card_partition_id"  2>&1 > $PRINT_OUT 
+	if [ $? -eq 0 ]; then
+		ledcontrol -n hd -c red -s off
+		ledcontrol -n hd -c green -s off
+		ledcontrol -n hd_blink -c green -s on
+		backup_dir=/mnt/"$sata_first_partition"/Card_"$card_partition_id"_Backup_"$date"
+		mkdir -m 777 $backup_dir 
+		if [ $? -ne 0 ]; then
+			echo "Creat dir:$backup_dir failed!"
+			logger "[One Touch Backup] The backup is failed, "
+		fi
+
+		check_capacity /mnt/"$card_dev_name""$card_partition_id" /mnt/"$sata_first_partition" 
+		cp -rfp * $backup_dir 
+		if [ $? -ne 0 ]; then
+			echo "Backup device $card_dev_name$card_partition_id failed!!"
+			logger "[One Touch Backup] The backup is failed, "
+		else
+			copy_times=`expr $copy_times + 1`
+		fi
+	fi
+	let card_partition_id=$card_partition_id+1 
+done
+if [ $copy_times -eq $card_num ]; then
+	logger "[One Touch Backup] The backup is finished and successful, "
+fi
+ledcontrol -n hd_blink -c green -s off
+echo "Ending Backup..."
+/sbin/check_HDD_capacity &
+rm -f $PID_file

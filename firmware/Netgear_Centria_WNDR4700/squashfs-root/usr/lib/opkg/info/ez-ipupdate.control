@@ -1,0 +1,13 @@
+Package: ez-ipupdate
+Version: 3.0.10-1
+Depends: 
+Provides: 
+Source: package/ez-ipupdate
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 56463
+Description:  Dynamic DNS application

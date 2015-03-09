@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<% http_header("style/top.css", "funcs.js", "top.js") %>
+<% top_body_header("lang_check.html", "select_language") %>
+
+<script>
+var language_oriArray = "<% lang_en() %>".split(" ");
+var language_showArray="<% lang_show() %>".split(" ");
+var gui_region = "<% cfg_get("GUI_Region") %>";
+var lang_select = "<% cfg_get("Language_Selection") %>";
+//var type = parent.type;
+var wan_status = "<% detwan_valid() %>";
+var config_status = <% autoup_status() %>;
+
+function loadvalue()
+{
+	if(lang_select != "Auto")
+		document.forms[0].lang_avi.value = gui_region;
+	else
+		document.forms[0].lang_avi.value = lang_select;
+
+	document.forms[0].lang_avi.disabled = true;
+
+	if(top.formframe.location.href.indexOf("lang_check.html") != -1)
+		top.formframe.location.href = "pls_wait_updateLanguage.html";
+
+	//load_top_value();
+        var upgrade_div = document.getElementById("update_info");
+        var basic_label = document.getElementById("basic_label");
+        var advanced_label = document.getElementById("advanced_label");
+
+	var sUserAgent = navigator.userAgent;
+	upgrade_div.style.display = "none";
+        if(parent.type == "basic")
+        {
+		basic_label.className = "label_click";
+		advanced_label.className = "label_unclick";
+        }
+        else if(parent.type == "advanced")
+        {
+		basic_label.className = "label_unclick";
+		advanced_label.className = "label_click";
+        }
+
+}
+
+</script>
+
+<input type=hidden name=hidden_lang_avi>
+<div id="logo"></div>
+<% top_hardware_version() %>
+<div id="labels">
+	<div id="basic_label" class="label_unclick">
+		<div id="label_left"></div>
+		<div id="label_middle"><b><span>$basic_title</span></b></div>
+		<div id="label_right"></div>
+	</div>
+	<div id="advanced_label" class="label_unclick">
+		<div id="label_left"></div>
+		<div id="label_middle"><b><span>$advanced_title</span></b></div>
+		<div id="label_right"></div>
+	</div>
+</div>
+<div id="firm_version">$router_firmware_version<br /><% cat_file("/firmware_version") %></div>
+<div id="update_info" class="update_info_down">
+	<div id="update_info_left"></div>
+	<div id="update_info_middle"><i>$firmware_upgrade_is_available_click_to_get</i></div>
+	<div id="update_info_right"></div>
+</div>
+<div id="select_language" align=right>
+	<select align=right name="lang_avi" id="language" size=1 onChange="change_select();">
+	<script language="javascript" type="text/javascript">
+		languageShowlist();
+	</script>
+	</select>
+</div>
+
+</form>
+</body>
+</html>
+

@@ -1,0 +1,13 @@
+Package: kmod-apm-emac-ar8327-enet
+Version: 2.6.32+-wndr4700-
+Depends: kernel (=2.6.32-1)
+Provides: 
+Source: package/kmod-apm-emac-ar8327-enet
+Section: kernel
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 1080071
+Description:  Ethernet driver integrated with apm emac

@@ -1,0 +1,137 @@
+<?
+include "/htdocs/mydlink/header.php";
+include "/htdocs/phplib/xnode.php";
+include "/htdocs/phplib/inf.php";
+include "/htdocs/webinc/config.php";
+include "/htdocs/mydlink/libservice.php";
+
+/* Current mydlink cgi doesn't indicate which SSID would apply this ACL. */
+/* It assumes that this ACL is for primary SSID. */
+
+$settingsChanged	= $_POST["settingsChanged"];
+$ACLMode			= $_POST["mode"];
+//$tmp				= "/var/run/wlan_acl.php";
+$tmp_file 		= "/tmp/form_wlan_acl.php";
+$debug				= "/var/run/form_wlan_acl.txt";
+$ret="fail";
+
+function get_valid_mac($value)
+{
+	$value = toupper($value);
+	$mac_len = strlen($value);
+	$mac_idx = 0;
+	$valid_mac = "";
+	$char = "";
+	$delimiter = ":";
+	while($mac_idx < $mac_len)
+	{
+		//if($mac_idx != 0 && $mac_idx % 2 == 0) $valid_mac = $valid_mac.":";
+		//$valid_mac = $valid_mac.charcodeat($value,$mac_idx);
+		//$mac_idx++;
+		$valid_mac = $valid_mac.substr($value,$mac_idx,2);
+		$mac_idx = $mac_idx + 2;
+		$char = charcodeat($value,$mac_idx);
+		if($char != "")
+		{
+			if($char == $delimiter){$mac_idx++;}
+			$valid_mac = $valid_mac.$delimiter;
+		}
+	}
+	
+	return $valid_mac;
+}
+
+function check_legal_mac($value)
+{
+	$count=cut_count($value, ":");
+	$i=0;
+	if($count != 6) 
+		{ $value="";}
+	else
+	{
+		while($i < $count)
+		{
+			$element = cut($value, $i, ":");
+			if($element == "" || isxdigit($element) == 0)
+			{
+				$value ="";
+				break;	
+			}
+			$i++;
+		}
+	}
+	return $value;
+}
+
+if($settingsChanged == 1){
+	$WIFIP = XNODE_getpathbytarget("/wifi", "entry", "uid", "WIFI-1", 0);
+
+	$mac_cnt = query($WIFIP."/acl/entry#");
+	while ($mac_cnt > 0)
+	{
+		del($WIFIP."/acl/entry");
+		$mac_cnt--;
+	}
+
+	//if ($ACLMode==1){set($WIFIP."/acl/policy", DROP);   }
+	//else			{set($WIFIP."/acl/policy", DISABLED);}
+
+	$i=0;
+	$j=0;
+	$count=0;
+	$MAX = query($WIFIP."/acl/max");
+
+	while($j <= $MAX){ 
+		fwrite("w+", $tmp_file, "<?\n");
+		fwrite("a",  $tmp_file, "$MAC	= $_POST[\"mac_".$i."\"];\n");
+		fwrite("a",  $tmp_file, "$ENABLE	= $_POST[\"enable_".$i."\"];\n");
+		fwrite("a",  $tmp_file, "?>\n");
+		dophp("load",$tmp_file);
+		$i++;
+		$j++;
+	  $mac_len = strlen($MAC);
+		if($mac_len < 17)  // legal mac len should be 17 ex:"00:e0:d8:ff:33:22"
+		{
+			if($mac_len==12)  //mac without ":"
+				{$MAC=get_valid_mac($MAC);}
+			else
+				{$MAC="";}  //illegal mac. set to null
+		}else if($mac_len > 17) {$MAC="";}
+		
+		$MAC=check_legal_mac($MAC);
+    
+		if($MAC!="" && $ENABLE!="")
+		{
+      $entry_mac = get_valid_mac($MAC);
+      if($entry_mac != "")
+			{
+				//if($j == 0) {$j = 1;}	 
+				$count++;
+				set($WIFIP."/acl/entry:".$count."/enable", $ENABLE);
+				set($WIFIP."/acl/entry:".$count."/mac", $entry_mac);
+		}
+	}
+	  //if($j != 0) {$j++;} 
+	}
+	
+	if($count > 0) 
+	{
+		if ($ACLMode==1)	{set($WIFIP."/acl/policy", "DROP"); }
+		else	{set($WIFIP."/acl/policy", "DISABLED"); }
+	}
+	else
+	{
+		set($WIFIP."/acl/policy", "DISABLED");
+	}
+	
+  set($WIFIP."/acl/count",$count);
+	unlink($tmp_file);
+	
+	//set($WIFIP."/acl/count",$j);
+	//unlink($tmp);
+	$ret="ok";
+	runservice($SRVC_WLAN." restart");
+}
+
+?>
+<?=$ret?>

@@ -1,0 +1,4 @@
+nf_nat_proto_gre dni_gre_version_check=0
+nf_conntrack_proto_gre
+nf_conntrack_pptp
+nf_nat_pptp

@@ -1,0 +1,92 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006 OpenWrt.org
+
+START=15
+
+KVER=`uname -r | cut -f 1`
+MODULE_PATH=/lib/modules/$KVER
+
+start() {
+		#Load AR8327 modules:
+		if [ -f $MODULE_PATH/ar8327.ko ]; then
+			/sbin/insmod $MODULE_PATH/ar8327.ko
+		fi
+
+		#re-enable PHY5 if U-boot disabled it
+		/usr/local/sbin/ssdk_sh debug reg set 0x69c 0x14025f 4
+
+		#VLAN config for AR8327
+		/usr/local/sbin/ssdk_sh portVlan ingress set 0 check
+		/usr/local/sbin/ssdk_sh portVlan ingress set 1 check
+		/usr/local/sbin/ssdk_sh portVlan ingress set 2 check
+		/usr/local/sbin/ssdk_sh portVlan ingress set 3 check
+		/usr/local/sbin/ssdk_sh portVlan ingress set 4 check
+		/usr/local/sbin/ssdk_sh portVlan ingress set 5 check
+		sleep 1
+
+		/usr/local/sbin/ssdk_sh portVlan defaultCVid set 0 2
+		/usr/local/sbin/ssdk_sh portVlan defaultCVid set 1 2
+		/usr/local/sbin/ssdk_sh portVlan defaultCVid set 2 2
+		/usr/local/sbin/ssdk_sh portVlan defaultCVid set 3 2
+		/usr/local/sbin/ssdk_sh portVlan defaultCVid set 4 2
+		/usr/local/sbin/ssdk_sh portVlan defaultCVid set 5 1
+		sleep 1
+
+		/usr/local/sbin/ssdk_sh vlan entry append 2 2 0,1,2,3,4 0 1,2,3,4 default default default
+		/usr/local/sbin/ssdk_sh vlan entry append 1 1 0,5 0 5 default default default
+		sleep 1
+
+		/usr/local/sbin/ssdk_sh portVlan egress set 0 tagged
+		/usr/local/sbin/ssdk_sh portVlan egress set 1 untagged
+		/usr/local/sbin/ssdk_sh portVlan egress set 2 untagged
+		/usr/local/sbin/ssdk_sh portVlan egress set 3 untagged
+		/usr/local/sbin/ssdk_sh portVlan egress set 4 untagged
+		/usr/local/sbin/ssdk_sh portVlan egress set 5 untagged
+		sleep 1
+
+		ifconfig $LAN_IF 0.0.0.0
+		vconfig add $LAN_IF 1
+		vconfig add $LAN_IF 2
+
+		/usr/local/sbin/ssdk_sh debug phy set 0 0xd 0x7
+		/usr/local/sbin/ssdk_sh debug phy set 0 0xe 0x3c
+		/usr/local/sbin/ssdk_sh debug phy set 0 0xd 0x4007
+		/usr/local/sbin/ssdk_sh debug phy set 0 0xe 0x00
+
+		/usr/local/sbin/ssdk_sh debug phy set 1 0xd 0x7
+                /usr/local/sbin/ssdk_sh debug phy set 1 0xe 0x3c
+                /usr/local/sbin/ssdk_sh debug phy set 1 0xd 0x4007
+                /usr/local/sbin/ssdk_sh debug phy set 1 0xe 0x00
+
+		/usr/local/sbin/ssdk_sh debug phy set 2 0xd 0x7
+                /usr/local/sbin/ssdk_sh debug phy set 2 0xe 0x3c
+                /usr/local/sbin/ssdk_sh debug phy set 2 0xd 0x4007
+                /usr/local/sbin/ssdk_sh debug phy set 2 0xe 0x00
+
+		/usr/local/sbin/ssdk_sh debug phy set 3 0xd 0x7
+                /usr/local/sbin/ssdk_sh debug phy set 3 0xe 0x3c
+                /usr/local/sbin/ssdk_sh debug phy set 3 0xd 0x4007
+                /usr/local/sbin/ssdk_sh debug phy set 3 0xe 0x00
+
+		/usr/local/sbin/ssdk_sh debug phy set 4 0xd 0x7
+                /usr/local/sbin/ssdk_sh debug phy set 4 0xe 0x3c
+                /usr/local/sbin/ssdk_sh debug phy set 4 0xd 0x4007
+                /usr/local/sbin/ssdk_sh debug phy set 4 0xe 0x00
+
+		#set ipv6 proc file
+        	/etc/net6conf/6proc start
+}
+
+stop() {
+	LAN_IFNUM=`ifconfig | grep "$LAN_IF." | wc -l`
+	if [ "$LAN_IFNUM" -gt "0" ]; then
+		cnt=1
+		while [ "$cnt" -le "$LAN_IFNUM" ]
+		do
+			vconfig rem $LAN_IF.$cnt
+			cnt=$(expr $cnt + 1)
+		done
+	fi
+	ifconfig $LAN_IF down
+	rmmod ar8327.ko
+}

@@ -1,0 +1,19 @@
+Package: i2c-tools
+Version: 3.0.3-1
+Depends: 
+Provides: 
+Source: package/i2c-tools
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 84143
+Description:  This package contains an heterogeneous set of I2C tools for Linux. These tools
+ were originally part of the lm-sensors package.
+ Includes:
+ - i2cdetect
+ - i2cdump
+ - i2cget
+ - i2cset

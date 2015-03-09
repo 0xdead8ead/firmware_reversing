@@ -1,0 +1,5 @@
+/usr/sbin/iwconfig
+/usr/sbin/iwlist
+/usr/sbin/iwgetid
+/usr/sbin/iwspy
+/usr/sbin/iwpriv

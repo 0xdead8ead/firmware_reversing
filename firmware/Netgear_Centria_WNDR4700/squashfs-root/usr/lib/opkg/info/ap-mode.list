@@ -1,0 +1,3 @@
+/etc/init.d/ap-mode
+/usr/sbin/restart_ap_udhcpc
+/usr/share/zcip/zcip.script

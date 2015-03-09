@@ -1,0 +1,12 @@
+#!/bin/sh
+
+PID_file=/var/run/log_fan_rpm_fault.pid
+test -f $PID_file && exit
+echo "$$" > $PID_file
+
+while [ 1 ]; do
+	logger "[FAN FAULT] The FAN is not working now. Please contact with NTGR customer support to replace the FAN,"
+	sleep 86400
+done
+
+rm -f $PID_file

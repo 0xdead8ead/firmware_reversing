@@ -1,0 +1,9 @@
+
+DECIMAL   	HEX       	DESCRIPTION
+-------------------------------------------------------------------------------------------------------------------
+0         	0x0       	TP-Link firmware header, firmware version: 3.13.15, image version: "ver. 1.0", product ID: 0x10430001, product version: 1, kernel load address: 0x80002000, kernel entry point: 0x801AE000, kernel offset: 512, kernel length: 828986, rootfs offset: 1048576, rootfs length: 7077888, bootloader offset: 0, bootloader length: 115472
+95904     	0x176A0   	U-Boot boot loader reference
+131584    	0x20200   	TP-Link firmware header, firmware version: 3.13.15, image version: "ver. 1.0", product ID: 0x10430001, product version: 1, kernel load address: 0x80002000, kernel entry point: 0x801AE000, kernel offset: 512, kernel length: 828986, rootfs offset: 1048576, rootfs length: 7077888, bootloader offset: 0, bootloader length: 0
+132096    	0x20400   	gzip compressed data, was "vmlinux.bin", from Unix, last modified: Tue Mar 18 20:11:27 2014
+1180160   	0x120200  	Squashfs filesystem, big endian, lzma signature, version 3.1, size: 3852370 bytes,  545 inodes, blocksize: 65536 bytes, created: Tue Mar 18 20:30:55 2014 
+

@@ -1,0 +1,244 @@
+#! /bin/sh
+
+CONFIG=/bin/config
+sata_diskname=`$CONFIG get sata_diskname`
+sata_partition_count=`$CONFIG get sata_partition_count`
+sata_partition_status=`$CONFIG get sata_partition_status`
+count=1
+
+sata_umount()
+{
+	echo "[sata_umount] <sata_partition_count> is $sata_partition_count get by config." > /dev/console
+	# sometimes we can't get the real number of partitions in the internal disk.
+	parted -s /dev/$sata_diskname print | grep "Number" -A16 | awk '{if($1!="Number") print $1;}' > /tmp/sata_part_num
+	if [ $? == 0 ]; then
+		total_count=0
+		while read LINE
+		do
+			echo "[sata_umount] this line is: $LINE" > /dev/console
+			if [ "x$LINE" != "x" ]; then
+				total_count=`expr $total_count + 1`
+			fi
+		done < /tmp/sata_part_num
+	fi
+	rm /tmp/sata_part_num
+	echo "[sata_umount] <sata_partition_count> is $total_count get by parted." > /dev/console
+	if [ $total_count -ge $sata_partition_count ]; then
+		sata_partition_count=$total_count
+	fi
+	echo "$sata_partition_count" > /tmp/sata_partition_num
+	sata_partition_num=$(cat "/tmp/sata_partition_num")
+
+	# Set sata_partition_count to '0' for GUI to wait for formatting disk completely.
+	$CONFIG set sata_partition_count=0
+	if [ "x$sata_diskname" != "x" ]; then
+                count=1
+                while [ $count -le $sata_partition_num ]
+                do
+			/usr/bin/killall minidlna
+			/usr/bin/killall smbd
+			/usr/bin/killall nmbd
+			/usr/bin/killall proftpd
+                        /sbin/hotplug2.umount $sata_diskname$count
+                        count=`expr $count + 1`
+                done
+        fi
+        /usr/sbin/detectSATA start
+}
+
+format_disk_part()
+{
+	echo "[format_disk_part] function format_disk_part in..."
+	echo "[format_disk_part] format disk partition is $1..." > /dev/console
+	if [ "x$(parted -s /dev/`echo $1 | sed 's/[0-9]//g'` print noshare | grep $1)" = "x" ]; then
+		mkfs.ext4 /dev/$1 -E lazy_itable_init=1 -b 65536
+	fi
+}
+
+format_disk()
+{
+	sata_partition_num=$(cat "/tmp/sata_partition_num")
+	echo "[format_sata_disk] sata_partition_num is $sata_partition_num" > /dev/console
+	if [ $sata_partition_num -ge 1 ]; then
+		count=1
+		while [ $count -le $sata_partition_num ]
+		do
+			if [ "x$(parted -s /dev/$sata_diskname print noshare | grep $sata_diskname$count)" = "x" ]; then
+				echo "[format_sata_disk] format $sata_diskname$count to EXT4" > /dev/console
+				mkfs.ext4 /dev/$sata_diskname$count -E lazy_itable_init=1 -b 65536
+			fi
+			count=`expr $count + 1`
+		done
+	else
+		# new internal HDD with no partitions, we need to use parted to format it.
+		echo "[format_sata_disk] This disk maybe a new internal HDD with no partitions ..." > /dev/console
+		count=1
+		if [ "x$(parted -s /dev/$sata_diskname print noshare | grep $sata_diskname$count)" = "x" ]; then
+			mkfs.ext4 /dev/$sata_diskname$count -E lazy_itable_init=1 -b 65536
+		fi
+
+	fi
+	echo "Run over for the function of format_disk..." > /dev/console
+}
+
+add_partition()
+{
+	#fdisk /dev/$sata_diskname n
+	echo "[add_partition] add_partition function in ..." > /dev/console
+	parted -s /dev/$sata_diskname print | grep "Partition Table" | awk '{print $3}' > /tmp/sata_pt
+	sata_pt=`cat /tmp/sata_pt`
+	rm /tmp/sata_pt
+	# If clean the disk by windows the first time, we can't use parted to add a partition to the HDD.
+	if [ "x$sata_pt" = "xunknown" ]; then
+		parted -s /dev/$sata_diskname mklabel gpt
+	fi
+	parted -s -- /dev/$sata_diskname mkpart primary 0 -1
+}
+
+delete_partition()
+{
+	#fdisk /dev/$sata_diskname d
+	# when the file system can't be mounted normally(base-files/files/etc/init.d/mountSATA), we'll call this function.
+	echo "function delete_partition is in ..." > /dev/console
+	parted -s /dev/$sata_diskname print | grep "Number" -A16 | awk '{if($1!="Number") print $1;}' > /tmp/sata_part_num
+	if [ $? == 0 ]; then
+		while read LINE
+		do
+			echo "[delete_partition] this line is: $LINE" > /dev/console
+			if [ "x$LINE" != "x" ]; then
+				parted -s /dev/$sata_diskname rm $LINE
+			fi
+		done < /tmp/sata_part_num
+	else
+		echo "[delete_partition] can't find any partitions in this sata disk!!" > /dev/console
+		parted -s /dev/$sata_diskname rm 1
+	fi
+	rm /tmp/sata_part_num
+
+}
+
+sata_tune2fs()
+{
+	sata_partition_num=$(cat "/tmp/sata_partition_num")
+	# Only for SATA HDD with EXT2/3/4, we'll release the reserved HDD space
+	echo "<sata_tune2fs> sata partition counts: $sata_partition_num"  > /dev/console
+	if [ $sata_partition_num -eq 1 ]; then
+		num=1
+		filesystem=$(/bin/mount | grep "/mnt/$sata_diskname$num" | awk '{print $5}')
+		#echo "<Single partition> Filesystem is $filesystem, we'll use tune2fs to release the reserved space..." > /dev/console
+		if [ "$filesystem" = "ext2" -o "$filesystem" = "ext3" -o "$filesystem" = "ext4" ]; then
+			tune2fs -m 0 /dev/$sata_diskname$num
+		else
+			echo "<Single partition> Disk $sata_diskname$num is $filesystem, will not do tune2fs to reserved space." > /dev/console
+		fi
+	elif [ $sata_partition_num -ge 2 ]; then
+		num=1
+		while [ $num -le $sata_partition_num ]
+		do
+			filesystem=$(/bin/mount | grep "/mnt/$sata_diskname$num" | awk '{print $5}')
+			#echo "<Multi partition> $sata_diskname$num is $filesystem, we'll use tune2fs to release the reserved space..." > /dev/console
+			if [ "$filesystem" = "ext2" -o "$filesystem" = "ext3" -o "$filesystem" = "ext4" ]; then
+				tune2fs -m 0 /dev/$sata_diskname$num
+			else
+				echo "<Multi partition> Disk $sata_diskname$num is $filesystem, will not do tune2fs to reserved space." > /dev/console
+			fi
+			num=`expr $num + 1`
+		done
+	else
+		# when the internal disk is new, the partitions number will be null
+		num=1
+		filesystem=$(/bin/mount | grep "/mnt/$sata_diskname$num" | awk '{print $5}')
+		echo "This new internal hdd filesystem is $filesystem, we'll use tune2fs to release the reserved space..." > /dev/console
+		if [ "$filesystem" = "ext2" -o "$filesystem" = "ext3" -o "$filesystem" = "ext4" ]; then
+			tune2fs -m 0 /dev/$sata_diskname$num
+		else
+			echo "<Single partition> Disk $sata_diskname$num is $filesystem, will not do tune2fs to reserved space." > /dev/console
+		fi
+	fi
+	rm /tmp/sata_partition_num
+}
+sata_mount()
+{
+	/etc/init.d/mountSATA start
+
+	# After format the SATA HDD form the GUI, we'll do the action of tune2fs
+	sata_tune2fs
+	echo "Congratulations: you've formatted and mounted the New HDD successfully!!!" > /dev/console
+}
+
+init_disk()
+{
+	echo "[init_disk] init_disk function in ..." > /dev/console
+	add_partition
+	if [ $? == 0 ]; then
+		echo "[init_disk] add partition successfully!" > /dev/console
+        	temp=`cat /proc/partitions | grep "$sata_diskname$count" | awk '{print $4}'`
+               	if [ "x$temp" != "x" ]; then
+                	format_disk
+                fi
+                /etc/init.d/mountSATA start
+		
+		# After format the SATA HDD form the GUI, we'll do the action of tune2fs
+		sata_tune2fs
+                echo "Congratulations: you've formatted and mounted the New HDD successfully" > /dev/console
+        else
+		echo "[init_disk] add partition failed, will exit from init_disk function." > /dev/console
+                exit
+        fi
+}
+
+reinit_disk()
+{
+	echo "[reinit_disk] reinit_disk function in ..." > /dev/console
+	delete_partition
+	if [ $? == 0 ]; then
+		init_disk
+	else
+		echo "[reinit_disk] delete partition failed, will exit from reinit_disk function." > /dev/console
+		exit
+	fi
+}
+
+case "$1" in
+	init_disk)
+		ledcontrol -n hd_full -c green -s on
+		#A new hdd, create partition and format for it
+		if [ "x$sata_diskname" != "x" -a $sata_partition_status -eq 0 ]; then
+			init_disk
+		fi
+		ledcontrol -n hd_full -c green -s off
+		ledcontrol -n hd -c green -s on
+	;;
+	reinit_disk)
+		ledcontrol -n hd_full -c green -s on
+		# it's not a new Hdd, and we can't recognize this partition table, so we will choose one and delete it
+		if [ "x$sata_diskname" != "x" -a $sata_partition_status -eq 1 -a $sata_partition_count -eq 0 ]; then
+			reinit_disk
+		fi
+		ledcontrol -n hd_full -c green -s off
+                ledcontrol -n hd -c green -s on
+	;;
+	add_partition)
+		if [ "x$sata_diskname" != "x" -a $sata_partition_status -eq 0 ]; then
+			add_partition
+		fi
+	;;
+	delete_partition)
+		delete_partition
+	;;
+	sata_mount)
+		sata_mount
+		ledcontrol -n hd_full -c green -s off
+		ledcontrol -n hd -c green -s on
+	;;		
+	sata_umount)
+		ledcontrol -n hd_full -c green -s on
+		sata_umount
+	;;
+	sata_mkfs)
+		format_disk
+	;;
+	sata_mkfs_part)
+		format_disk_part $2
+	;;
+esac

@@ -1,0 +1,147 @@
+<% http_header("style/form.css", "/funcs.js", "/UPnP_Media.js") %>
+<% body_header("_UPNP_media", "UPNP_media.htm", "upnp_media") %>
+<div class="page_title">$media_settins</div>
+<div id="main" class="main"> 
+<% table_header() %>
+$bluebar
+
+<% save_timestamp("upnp_media", "upnp_media_scan") %>
+<script>
+var upnp_media_onoff="<% cfg_get("upnp_enableMedia") %>";
+var upnp_media_name="<% cfg_sed_xss("upnp_serverName") %>";
+var scanType="<% cfg_get("upnp_scanType") %>";
+//var scanPeriod="<% cfg_get("upnp_scanPeriod") %>";
+//bug 24250:Tivo supporting from NETGEAR's request
+var upnp_enabletivo_flag="<% cfg_get("upnp_enable_tivo") %>";
+var tivo_flag=parent.tivo_flag;
+
+function loadvalue()
+{
+	var cf=document.forms[0];
+	if(tivo_flag == 1)
+		document.getElementById("tivo_display").style.display="";
+	else
+		document.getElementById("tivo_display").style.display="none";
+	
+	if(upnp_media_onoff == "1")
+		cf.media_server.checked =true;
+	else
+		cf.media_server.checked =false;
+
+	cf.media_server_name.value=upnp_media_name.replace(/: <% cat_file("/module_name") %>/g, "").replace(/&#92;/g, "\\").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&#40;/g,"(").replace(/&#41;/g,")").replace(/&#34;/g,'\"').replace(/&#39;/g,"'").replace(/&#35;/g,"#").replace(/&#38;/g,"&");
+
+//	if(scanType == "0")
+//		cf.scan.checked=false;
+//	else
+		cf.scan.checked=true;
+	//else
+		//cf.scan[1].checked=true;
+	//cf.scan_time.value=scanPeriod;
+	if(upnp_enabletivo_flag == "yes")
+		cf.media_server_tivo.checked = true;
+	else
+		cf.media_server_tivo.checked = false;
+	mediaserver_enable();
+}
+
+function check_name()
+{
+	var cf=document.forms[0];
+	var media_name=cf.media_server_name.value;
+       // cf.hidden_media_server_name.value=media_name+": WNDR3700";
+	if(media_name.indexOf(":") == -1)//bug 29090:user input ':',then ':<model name>'must not be added and advertise to the network
+	    cf.hidden_media_server_name.value=media_name+": <% cat_file("/module_name") %>";
+	else
+		cf.hidden_media_server_name.value=media_name;
+}
+
+function mediaserver_enable()
+{
+	var cf=document.forms[0];
+	if(cf.media_server.checked == true)
+	{
+		cf.media_server_tivo.disabled=false;
+		cf.media_server_name.disabled=false;
+		cf.scan.disabled=false;
+	}
+	else
+	{
+		cf.media_server_tivo.disabled=true;
+		cf.media_server_name.disabled=true;
+		cf.scan.disabled=true;
+	}
+}
+</script>
+<input type="hidden" name="media_server_onoff">
+<input type="hidden" name="changetime">
+<input type="hidden" name="hidden_advertime" value="">
+<input type="hidden" name="hidden_timetolive" value="">
+<input type="hidden" name="hidden_media_server_name">
+<input type="hidden" name="media_server_tivo_flag">
+<input type="hidden" name="hidden_media_scan">
+<TR>
+	<TD nowrap colspan=2>
+	<input type="checkbox" name="media_server" value="1" onClick="mediaserver_enable()">
+	<A tabindex=-1 href="javascript:loadhelp('_UPNP_media','turnon')"><B>$media_server_enable</B></A>
+	</TD>
+</TR>
+<TR id=tivo_display>
+	<TD nowrap colspan=2>
+	<input type="checkbox" name="media_server_tivo" value="1">
+	<A tabindex=-1 href="javascript:loadhelp('_UPNP_media','tivo')"><B>$media_server_tivo</B></A>
+	</TD>
+</TR>
+<TR>
+	<TD nowrap>
+	<A tabindex=-1 href="javascript:loadhelp('_UPNP_media','name')"><B>$media_server_name</B></A>:
+	</TD>
+	<TD nowrap align=left>
+	<input type="text" name="media_server_name" size="32" onBlur="check_name()" onKeyPress="return getkey('mediaServerName', event)">
+	<script>
+		var medianame=upnp_media_name.replace(": <% cat_file("/module_name") %>", ""); 
+		if(medianame.indexOf(":") == -1)
+			document.write(": <% cat_file("/module_name") %>");
+	</script>
+	</TD>
+</TR>
+$bluebar
+<TR>
+	<TD>
+	<input class="apply_bt" type="button" name="Apply_Media" value="$apply_mark" onClick="check_media(document.forms[0])">
+	</TD>
+</TR>
+$bluebar
+<TR>
+	<TD nowrap colspan=2>
+	<A tabindex=-1 href="javascript:loadhelp('_UPNP_media','scan')"><B>$media_scan</B></A>
+	</TD>
+</TR>
+<TR>
+	<TD nowrap colspan=2>
+	<input type="radio" name="scan" value="1" onClick="">$media_auto_scan
+	</TD>
+</TR>
+<!--<TR>
+        <TD nowrap colspan=2>
+        <input type="radio" name="scan" value="1" onClick="">$media_schedule_scan
+	<input type="text" name="scan_time" size="4" onKeyPress="return getkey('num', event)">$media_minutes
+        </TD>
+</TR>
+<TR>
+	<TD>
+	<input type="button" name="Apply_Scan" value="$media_scan_now" onClick="">
+	</TD>
+</TR>-->
+$bluebar
+<TR>
+	<TD nowrap>
+	<input class="apply_media" type="button" name="Apply" value="$rescan_media_files" onClick="check_media_scan(document.forms[0])">
+	</TD>
+</TR>
+</TABLE>
+
+</div>
+<% help_box("1","_UPNP_media") %>
+</FORM>
+</BODY>
+</HTML>

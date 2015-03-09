@@ -1,0 +1,13 @@
+Package: radvd
+Version: 1.5-1
+Depends: kmod-ipv6
+Provides: 
+Source: package/radvd
+Section: ipv6
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 125380
+Description:  IPv6 Routing Advertisement Daemon.

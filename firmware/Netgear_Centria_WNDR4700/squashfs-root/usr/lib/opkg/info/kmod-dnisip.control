@@ -1,0 +1,13 @@
+Package: kmod-dnisip
+Version: 2.6.32-wndr4700-1
+Depends: kernel (=2.6.32-1)
+Provides: 
+Source: package/kmod-dnisip
+Section: kernel
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 55470
+Description:  DNI SIP ALG

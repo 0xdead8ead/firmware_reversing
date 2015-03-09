@@ -1,0 +1,3 @@
+/usr/sbin/smartctl
+/usr/sbin/smartd
+/usr/etc/smartd.conf

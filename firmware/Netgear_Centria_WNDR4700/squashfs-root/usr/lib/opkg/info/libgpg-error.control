@@ -1,0 +1,17 @@
+Package: libgpg-error
+Version: 1.10-1
+Depends: 
+Provides: 
+Source: package/libgpg-error
+Section: libs
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 30684
+Description:  An helper library for common error codes and descriptions.
+ This is a library that defines common error values for all GnuPG 
+ components. Among these are GPG, GPGSM, GPGME, GPG-Agent, libgcrypt, 
+ Libksba, DirMngr, Pinentry, SmartCard Daemon and possibly more in the 
+ future.

@@ -1,0 +1,3 @@
+/lib/modules/2.6.32.11-wndr4700/pppox.ko
+/etc/modules.d/40-pppoe
+/lib/modules/2.6.32.11-wndr4700/pppoe.ko

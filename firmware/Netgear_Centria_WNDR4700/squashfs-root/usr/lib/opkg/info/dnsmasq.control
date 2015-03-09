@@ -1,0 +1,13 @@
+Package: dnsmasq
+Version: 2.39-1
+Depends: 
+Provides: 
+Source: package/dnsmasq
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 136076
+Description:  It is intended to provide coupled DNS and DHCP service to a LAN.

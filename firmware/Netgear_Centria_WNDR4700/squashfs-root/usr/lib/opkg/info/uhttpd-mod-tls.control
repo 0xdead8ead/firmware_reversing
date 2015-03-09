@@ -1,0 +1,13 @@
+Package: uhttpd-mod-tls
+Version: 31
+Depends: uhttpd, libcyassl
+Provides: 
+Source: package/uhttpd
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: Jo-Philipp Wich <xm@subsignal.org>
+Architecture: wndr4700
+Installed-Size: 18064
+Description:  The TLS plugin adds HTTPS support to uHTTPd.

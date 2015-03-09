@@ -1,0 +1,14 @@
+Package: dnibusybox
+Version: 1.4.2-2
+Depends: 
+Provides: 
+Source: package/dnibusybox
+Section: base
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 598807
+Description:  The Swiss Army Knife of embedded Linux.
+ It slices, it dices, it makes Julian Fries.

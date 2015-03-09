@@ -1,0 +1,30 @@
+<% http_header() %>
+<% body_header("_Wizard_cfm", "simcard_yes_or_not.htm", "detect_simcard") %>
+<script>
+function retry_detect_simcard()
+{
+	document.forms[0].submit();
+}
+</script>
+<table width=100%>
+<tr><td align=center><h3>$detect_not_simcard</h3></td></tr>
+$bluebar
+<tr><td>&nbsp;</td></tr>
+<tr><td>$spacebar $detect_not_simcard_msg1</td></tr>
+<tr><td>&nbsp;</td></tr>
+<tr><td>$spacebar<b>$detect_not_simcard_msg2</b></td></tr>
+<tr><td>$spacebar $detect_not_simcard_msg3</td></tr>
+<tr><td>&nbsp;</td></tr>
+$bluebar
+<tr><td>&nbsp;</td></tr>
+<tr><td>$spacebar<b>$detect_not_simcard_msg4</b></td></tr>
+<tr><td>$spacebar $detect_not_simcard_msg5</td></tr>
+<tr><td>&nbsp;</td></tr>
+$bluebar
+<tr><td align=center>
+<input type="button" value="$back_mark" onclick='location.href="detect_succ_hsdpa.htm";'>&nbsp;&nbsp;&nbsp;
+<input type="button" value="$retry_mark" onclick="retry_detect_simcard()">&nbsp;&nbsp;&nbsp;
+<input type="button" value="$quit_mark" onclick='location.href="WIZ_sel_3g_adsl.htm";'>
+</td></tr>
+</table></form>
+</body></html>

@@ -1,0 +1,109 @@
+#!/bin/sh
+CONFIG=/bin/config
+
+while [ 1 ]; do
+	sata_diskname=`$CONFIG get sata_diskname`
+	sata_partition_count=`$CONFIG get sata_partition_count`
+	full_flag=0
+
+	# Off: no Internal HDD connect.
+	if [ "x$($CONFIG get sata_diskname)" == "x" ]; then
+		ledcontrol -n hd -c green -s off
+		ledcontrol -n hd -c red -s off
+	else
+		# Red: HDD failure alert or not formatted.
+		#Case1: Formatted not finished, no partition for HDD, we can just see it in fdisk
+		#Case2: HDD with partitions but not format,it also can't mount normally.
+		if [ $sata_partition_count -eq 0 ]; then
+			ledcontrol -n hd -c green -s off
+			ledcontrol -n hd -c red -s on
+		# If the SATA HDD has only one partition
+		elif [ $sata_partition_count -eq 1 ]; then
+			capacity=`df | grep Internal_Disk | awk '{print int($5)}'`
+			if [ "$capacity" -lt "85" ]; then
+				# May be changed from 85 or 95 percent status (for idea 1)
+				#ledcontrol -n hd_full -c green -s off
+
+				# less than the 85 percent status
+				ledcontrol -n hd -c red -s off
+				ledcontrol -n hd -c green -s on
+			elif [ "$capacity" -ge "85" -a "$capacity" -lt "95" ]; then
+				# May be changed from 95 percent status (for idea 1)
+				#ledcontrol -n hd_full -c green -s off
+
+				# Both green and red LED on
+				ledcontrol -n hd -c green -s on
+				ledcontrol -n hd -c red -s on
+			elif [ "$capacity" -ge "95" ]; then
+				# idea 1:
+				#ledcontrol -n hd_full -c green -s on
+				#ledcontrol -n hd_full -c green -s off
+
+				# idea 2, it's better apperance for LED
+				ledcontrol -n hd -c green -s off
+				ledcontrol -n hd -c red -s off
+				sleep 1
+				ledcontrol -n hd -c green -s on
+				ledcontrol -n hd -c red -s on
+				full_flag=1
+			fi
+		# If the SATA HDD has multi partitions
+		elif [ $sata_partition_count -ge 2 ]; then
+			count=1
+			temp_used_capacity=0
+			used_capacity=0
+			temp_available_capacity=0
+			available_capacity=0
+			total_capacity=0
+			used_avg=0
+			while [ $count -le $sata_partition_count ]
+			do
+				if [ "x$(parted -s /dev/$sata_diskname print noshare | grep $sata_diskname$count)" = "x" ]; then
+					temp_used_capacity=`df -k | grep /tmp/mnt/$sata_diskname$count | awk '{print $3}'`
+					temp_available_capacity=`df -k | grep /tmp/mnt/$sata_diskname$count | awk '{print $4}'`
+					used_capacity=`expr $used_capacity + $temp_used_capacity`
+					available_capacity=`expr $available_capacity + $temp_available_capacity`
+				else
+					sata_partition_count=`expr $sata_partition_count + 1`
+				fi
+				count=`expr $count + 1`
+			done
+			total_capacity=`expr $used_capacity + $available_capacity`
+			used_avg=`expr $used_capacity \* 100 / $total_capacity`
+			if [ "$used_avg" -lt "85" ]; then
+				# May be changed from 85 or 95 percent status (for idea 1)
+				#ledcontrol -n hd_full -c green -s off
+
+				# less than the 85 percent status
+				ledcontrol -n hd -c red -s off
+				ledcontrol -n hd -c green -s on
+			elif [ "$used_avg" -ge "85" -a "$used_avg" -lt "95" ]; then
+				 # May be changed from 95 percent status to this condition (for idea 1)
+				# ledcontrol -n hd_full -c green -s off
+
+				# Both green and red LED on
+				ledcontrol -n hd -c green -s on
+				ledcontrol -n hd -c red -s on
+			elif [ "$used_avg" -ge "95" ]; then
+				# idea 1:
+				#ledcontrol -n hd_full -c green -s on
+				#ledcontrol -n hd_full -c green -s off
+
+				# idea 2: it's better apperance for user
+				ledcontrol -n hd -c green -s off
+				ledcontrol -n hd -c red -s off
+				sleep 1
+				ledcontrol -n hd -c green -s on
+				ledcontrol -n hd -c red -s on
+				full_flag=1
+			fi
+		fi
+	fi
+	if [ "$full_flag" = "0" ]; then
+		sleep 31
+	else
+		sleep 13
+	fi
+
+done
+

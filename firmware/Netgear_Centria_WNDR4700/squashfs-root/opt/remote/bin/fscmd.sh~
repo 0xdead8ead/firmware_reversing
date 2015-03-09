@@ -1,0 +1,327 @@
+#!/bin/sh
+#-------------------------------------------------------------------------
+#  Copyright 2010, NETGEAR
+#  All rights reserved.
+#-------------------------------------------------------------------------
+# arg: <action{grab|mkdir}>:<msg.guid>:<file.path>
+#-------------------------------------------------------------------------
+
+# load environment
+. /opt/remote/bin/comm.sh
+
+# TODELETE
+#echo "${1}" >> "${SYS_PREFIX}/bin/fscmd.log"
+
+#
+# arg: <msg.guid> <path>
+#
+do_grab()
+{
+    local guid="${1}"
+    local path="${2}"
+    FS=`fsgrab 2 ${path}`
+
+    DATA="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+    DATA="${DATA}<request moniker=\"/root/devices\" method=\"sendfsgrab\">"
+    DATA="${DATA}<body type=\"fsgrab\">"
+    DATA="${DATA}<guid>${guid}</guid>"
+    DATA="${DATA}<value><![CDATA[fs:${FS}]]></value>"
+    DATA="${DATA}</body></request>"
+
+    comm_post "${DATA}"
+    return $OK
+}
+
+#
+# arg: <msg.guid>
+#
+do_listshares()
+{
+    local guid="${1}"
+
+    SL=`remote_smb_conf -list_shares 2>/dev/null | awk '(NR-3)%6 != 0' | sed '$s/.$//' `
+
+    DATA="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+    DATA="${DATA}<request moniker=\"/root/devices\" method=\"sendfsgrab\">"
+    DATA="${DATA}<body type=\"fsgrab\">"
+    DATA="${DATA}<guid>${guid}</guid>"
+    DATA="${DATA}<value><![CDATA[sh:${SL}]]></value>"
+    DATA="${DATA}</body></request>"
+
+    comm_post "${DATA}"
+    #echo "${DATA}"
+    return $OK
+}
+
+
+#
+# arg: <msg.guid> <sharename> <path> <readaccess> <writeaccess>
+#
+do_addshare()
+{
+    local guid="${1}"
+    local name="${2}"
+    local path=`fsgrab -s ${3}`
+    local readaccess="${4}"
+    local writeaccess="${5}"
+
+    #remote_smb_conf -add_share -localPath="U:/netgear/plugins" -shareName="plugins" -readAccessUser="All - no password" -writeAccessUser="All - no password"
+    remote_smb_conf -add_share -localPath="${path}" -shareName="${name}" -readAccessUser="${readaccess}" -writeAccessUser="${writeaccess}"
+
+    DATA="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+    DATA="${DATA}<request moniker=\"/root/devices\" method=\"sendfsgrab\">"
+    DATA="${DATA}<body type=\"fsgrab\">"
+    DATA="${DATA}<guid>${guid}</guid>"
+    DATA="${DATA}<value><![CDATA[as:ok]]></value>"
+    DATA="${DATA}</body></request>"
+
+    comm_post "${DATA}"
+    #echo "${DATA}"
+    return $OK
+}
+
+#
+# arg: <msg.guid> <shareid> <localpath> <sharename> <readaccess> <writeaccess>
+#
+do_editshare()
+{
+    local guid="${1}"
+    local id="${2}"
+    local path=`fsgrab -s ${3}`
+    local name="${4}"
+    local readaccess="${5}"
+    local writeaccess="${6}"
+
+    #remote_smb_conf -edit_share -shareId=id -localPath=path -shareName=sharename -readAccessUser='admin|All - no password' -writeAccessUser='admin|All - no password'
+    #remote_smb_conf -edit_share -shareId=2 -localPath='U:\netgear\plugins' -shareName='share2' -readAccessUser='All - no password' -writeAccessUser='admin'
+    remote_smb_conf -edit_share -shareId="${id}" -localPath="${path}" -shareName="${name}" -readAccessUser="${readaccess}" -writeAccessUser="${writeaccess}"
+
+    DATA="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+    DATA="${DATA}<request moniker=\"/root/devices\" method=\"sendfsgrab\">"
+    DATA="${DATA}<body type=\"fsgrab\">"
+    DATA="${DATA}<guid>${guid}</guid>"
+    DATA="${DATA}<value><![CDATA[es:ok]]></value>"
+    DATA="${DATA}</body></request>"
+
+    comm_post "${DATA}"
+    #echo "${DATA}"
+    return $OK
+}
+
+#
+# arg: <msg.guid> <shareid> <localpath> <sharename> <readaccess> <writeaccess>
+#
+do_stopshare()
+{
+    local guid="${1}"
+	local id="${2}"
+	
+	#remote_smb_conf -delete_share -shareId=id
+	remote_smb_conf -delete_share -shareId="${id}"
+
+    DATA="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+    DATA="${DATA}<request moniker=\"/root/devices\" method=\"sendfsgrab\">"
+    DATA="${DATA}<body type=\"fsgrab\">"
+	DATA="${DATA}<guid>${guid}</guid>"
+    DATA="${DATA}<value><![CDATA[ss:ok]]></value>"
+    DATA="${DATA}</body></request>"
+
+    comm_post "${DATA}"
+	#echo "${DATA}"
+    return $OK
+}
+
+#
+# arg: <msg.guid> <membername>
+#
+do_addnetwork()
+{
+	local guid="${1}"
+	local member="${2}"
+	NET=`${SYS_PREFIX}/bin/leafnetadmin create ${NAS_NAME} ${member}`
+
+	DATA="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+    DATA="${DATA}<request moniker=\"/root/devices\" method=\"sendfsgrab\">"
+    DATA="${DATA}<body type=\"fsgrab\">"
+	DATA="${DATA}<guid>${guid}</guid>"
+    DATA="${DATA}<value><![CDATA[an:${NET}]]></value>"
+    DATA="${DATA}</body></request>"
+
+    comm_post "${DATA}"
+	#echo "${DATA}"
+    return $OK
+}
+
+
+#
+# arg: <msg.guid> <membername>
+#
+do_invitemember()
+{
+	local guid="${1}"
+	local netid="${2}"
+	local email="${3}"
+	member=`${SYS_PREFIX}/bin/leafnetadmin invite ${netid} ${email}`
+
+	DATA="<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+    DATA="${DATA}<request moniker=\"/root/devices\" method=\"sendfsgrab\">"
+    DATA="${DATA}<body type=\"fsgrab\">"
+	DATA="${DATA}<guid>${guid}</guid>"
+    DATA="${DATA}<value><![CDATA[im:${member}]]></value>"
+    DATA="${DATA}</body></request>"
+
+    comm_post "${DATA}"
+	#echo "${DATA}"
+    return $OK
+}
+
+
+#
+# arg: <file.path>
+#
+do_mkdir()
+{
+    local src=`echo "${1}" | sed -e 's/\/*$//'`
+    
+    echo src $src
+    
+    local dir0="${src##*/}"
+    local dir1="${src%"${dir0}"}"
+    local dir1=`realpath "${dir1}"`
+    local dir1v="${dir1#/}"
+    dir1v="${dir1v%%/*}"
+#    vols=(c d e f)
+#    local valid="n"
+#    for v in ${vols[@]}
+#    do
+#	[ "x${dir1v}" == "x${v}" ] && {
+#	    valid="y"
+#	    break
+#	}
+#    done
+#    [ "${valid}" != "y" ] && {
+#	return $ERROR
+#    }
+    mkdir -p "${dir1}/${dir0}" || {
+	return $ERROR
+    }
+    chmod 777 "${dir1}/${dir0}"
+    return ${OK}
+}
+
+#
+# arg: <file.path>
+#
+do_rm()
+{
+    local src=`echo "${1}" | sed -e 's/\/*$//'`
+    [ ! -e "${src}" ] && {
+	return $ERROR
+    }
+    local dir0="${src##*/}"
+    local dir1="${src%"${dir0}"}"
+    local dir1=`realpath "${dir1}"`
+    local dir1v="${dir1#/}"
+    dir1v="${dir1v%%/*}"
+    # vols=(c d e f)
+    # local valid="n"
+    # for v in ${vols[@]}
+    # do
+	# [ "x${dir1v}" == "x${v}" ] && {
+	#     valid="y"
+	#     break
+	# }
+    # done
+    # [ "${valid}" != "y" ] && {
+	# return $ERROR
+    # }
+    f="${dir1}/${dir0}"
+    if [ -d "${f}" ]; then
+	rm -rf "${f}"
+	return $OK
+    fi
+    rm -f "${f}"
+    return ${OK}
+}
+
+#
+# arg: <file.path> <file.path>
+#
+do_cp()
+{
+    cp "${1}" "${2}"
+    return ${OK}
+}
+
+#
+# arg: <file.path> <file.path>
+#
+do_mv()
+{
+    mv "${1}" "${2}"
+    return ${OK}
+}
+
+#######################################
+
+#[ $# < 3 ] && {
+#    exit $ERROR
+#}
+
+action="${1}"
+guid="${2}"
+
+
+ case "${action}" in
+     "grab")
+	    arg3="${3}"
+		if [ "xshares" == "x${arg3}" ]; then
+		do_listshares "${guid}"
+		exit $OK
+		fi
+		if [ "xaddshare" == "x${arg3}" ]; then
+		do_addshare "${guid}" "${4}" "${5}" "${6}" "${7}"
+		exit $OK
+		fi
+		if [ "xeditshare" == "x${arg3}" ]; then
+		do_editshare "${guid}" "${4}" "${5}" "${6}" "${7}" "${8}"
+		exit $OK
+		fi
+		if [ "xstopshare" == "x${arg3}" ]; then
+		do_stopshare "${guid}" "${4}"
+		exit $OK
+		fi
+		if [ "xaddnetwork" == "x${arg3}" ]; then
+		do_addnetwork "${guid}" "${4}"
+		exit $OK
+		fi
+		if [ "xinvitemember" == "x${arg3}" ]; then
+		do_invitemember "${guid}" "${4}" "${5}"
+		exit $OK
+		fi
+ 		do_grab "${guid}" "${arg3}"
+ 		;;
+     "mkdir")
+		path=`fsgrab -r ${3}`
+         	do_mkdir "${path}"
+         ;;
+     "rm")
+		path=`fsgrab -r ${3}`
+ 		do_rm "${path}"
+         ;;
+     "cp")
+	#TODO
+		# do_cp "${path0}" "${path1}"
+        ;;
+    "mv")
+	#TODO
+        # do_mv "${path0}" "${path1}"
+        ;;
+    *)
+	exit $ERROR
+	;;
+esac
+
+exit $OK
+
+#./fscmd.sh "grab" "sdffkjsfjk" "editshare" "2" "share2" "/netgear/plugins" "All - no password" "admin"

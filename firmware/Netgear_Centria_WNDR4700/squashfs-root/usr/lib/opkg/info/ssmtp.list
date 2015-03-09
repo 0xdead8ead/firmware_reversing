@@ -1,0 +1,6 @@
+/etc/email/send_email_alert
+/etc/email/send_log
+/etc/email/email_log
+/usr/sbin/ssmtp
+/etc/email/email_HDD_err_log
+/etc/email/email_full_log

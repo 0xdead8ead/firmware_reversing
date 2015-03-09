@@ -1,0 +1,13 @@
+Package: wlan-common
+Version: 2.5-1
+Depends: 
+Provides: 
+Source: package/wlan-common
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 62133
+Description:  DNI wlan common scripts

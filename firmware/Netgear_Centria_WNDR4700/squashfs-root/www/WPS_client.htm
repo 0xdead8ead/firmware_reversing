@@ -1,0 +1,12 @@
+<% http_header("style/form.css") %>
+
+<script>
+wps_client="<% wps_process_status() %>";
+if (wps_client == "1")
+	location.href="WPS_success.htm";
+else
+	location.href="WPS_failure.htm";
+</script>
+</HTML>
+
+<% echo_set("0","/tmp/wps_process_state") %>

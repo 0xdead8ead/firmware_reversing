@@ -1,0 +1,89 @@
+<% ca_http_header("style/hijack_style.css","style/hijack_ru_welcome.css", "/funcs.js","/bas_pppoe.js") %>
+
+<BODY onLoad="loadvalue();" bgcolor=#ffffff>
+<FORM>
+	
+<script>
+function loadvalue()
+{
+	var form=document.forms[0];
+	var dual_enable=parent.dual_access;
+	if(dual_enable == '0')
+		form.RU_pppoe_dual[1].checked = true;
+	else
+		form.RU_pppoe_dual[0].checked = true;
+
+        //buttons left
+        var btns_div1 = document.getElementById("btnsContainer_div1");
+        btns_div1.onclick = function()
+        {
+                location.href="RU_manual_pppoe2.htm";
+        }
+
+        //buttons right
+        var btns_div2 = document.getElementById("btnsContainer_div2");
+        btns_div2.onclick = function()
+        {
+                check_dual();
+        }
+
+}	
+
+function check_dual()
+{	
+	form=document.forms[0];
+  if(form.RU_pppoe_dual[0].checked == true){
+  	parent.dual_access=1;
+  	location.href="RU_manual_pppoe_dual.htm";
+  }
+	else if(form.RU_pppoe_dual[1].checked == true){
+		parent.dual_access=0;
+		location.href="RU_manual_spoof.htm";
+	}
+	else{
+		alert("$RU_login_error");
+		return false;
+  }
+}
+</script>
+
+<div class="wizard_content_div">
+<div class="wizard_words_div">
+<TABLE>
+<TR><TD colSpan=2><H1><script>document.write(RU_CA_head)</script></H1></TD></TR>
+<tr>
+	<td colspan=3><script>document.write(RU_pppoe_dual_head)</script></td>
+</tr>
+	<tr><td><br></td></tr>
+	
+<TR> 
+	<TD class="RU_radio" colspan=2>
+	<input type="radio" name="RU_pppoe_dual" value="yes"><script>document.write(bh_yes_mark)</script></TD>
+	</TD>
+</TR>
+<TR> 
+	<TD class="RU_radio" colspan=2>
+	<input type="radio" name="RU_pppoe_dual" value="no"><script>document.write(no_mark)</script></TD>
+	</TD>
+</TR>
+
+<tr><td><br></td></tr>
+</TABLE>
+</div><!--wizard_words_div -->
+<div id="center_buttons">
+  <div id="allBtns_div" class="wizard_buttons_div" align="center">
+                <div id="btnsContainer_div1" class="buttons_img_div" align="center">
+                        <img src="image/ca-little-purple-button.gif" />
+                        <div class="buttons_words_div"><script>document.write(bh_back_mark)</script></div>
+                </div>
+                <div class="buttons_split"></div>
+                <div id="btnsContainer_div2" class="buttons_img_div" align="center">
+                        <img src="image/ca-little-purple-button.gif" />
+                        <div class="buttons_words_div"><script>document.write(bh_next_mark)</script></div>
+                </div>
+  </div><!--allBtns_div -->
+</div>
+</div><!--wizard_content_div -->
+</FORM>
+</BODY>
+</HTML>

@@ -1,0 +1,13 @@
+
+Scan Time:     2014-07-24 13:25:29
+Signatures:    193
+Target File:   /mnt/hgfs/exploits/sohopeless/firmware/TP-Link_TL-WR1043ND/v2/wr1043v2_en_3_17_38_up_boot(140613).bin
+MD5 Checksum:  4b440f476a79b440ceb094e542537399
+
+DECIMAL   	HEX       	DESCRIPTION
+-------------------------------------------------------------------------------------------------------
+0         	0x0       	TP-Link firmware header, firmware version: 3.17.38, image version: "ver. 1.0", product ID: 0x10430002, product version: 1, kernel load address: 0x80002000, kernel entry point: 0x801D01A0, kernel offset: 512, kernel length: 868751, rootfs offset: 1048576, rootfs length: 7077888, bootloader offset: 0, bootloader length: 108532
+131584    	0x20200   	TP-Link firmware header, firmware version: 3.17.38, image version: "ver. 1.0", product ID: 0x10430002, product version: 1, kernel load address: 0x80002000, kernel entry point: 0x801D01A0, kernel offset: 512, kernel length: 868751, rootfs offset: 1048576, rootfs length: 7077888, bootloader offset: 0, bootloader length: 0
+132096    	0x20400   	LZMA compressed data, properties: 0x5D, dictionary size: 33554432 bytes, uncompressed size: 2496576 bytes
+1180160   	0x120200  	Squashfs filesystem, little endian, version 4.0, compression: lzma, size: 4688361 bytes,  600 inodes, blocksize: 131072 bytes, created: Fri Jun 13 00:32:05 2014 
+

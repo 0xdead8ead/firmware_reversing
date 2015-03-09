@@ -1,0 +1,4 @@
+/etc/modules.d/30-ppp
+/lib/modules/2.6.32.11-wndr4700/ppp_generic.ko
+/lib/modules/2.6.32.11-wndr4700/ppp_async.ko
+/lib/modules/2.6.32.11-wndr4700/slhc.ko

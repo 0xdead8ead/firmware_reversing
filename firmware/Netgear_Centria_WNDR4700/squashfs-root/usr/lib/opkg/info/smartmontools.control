@@ -1,0 +1,13 @@
+Package: smartmontools
+Version: 5.42
+Depends: 
+Provides: 
+Source: package/smartmontools
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 640898
+Description:  S.M.A.R.T. utility tools

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ "$ACTION" = "add" -a "$1" = "scsi_device" ] ; then
+	`usbp mount`
+	`echo 1 > /tmp/ab`
+fi
+if [ "$ACTION" = "remove" -a "$1" = "scsi_host" ] ; then
+	`usbp umount`
+	`echo 2 > /tmp/ab`
+fi
+exit 0

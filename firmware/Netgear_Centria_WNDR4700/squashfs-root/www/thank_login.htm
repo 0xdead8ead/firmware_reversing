@@ -1,0 +1,59 @@
+<% http_header("style/form.css", "/funcs.js") %>
+<% nobody_header("thank_login.htm", "thanklogin") %>
+
+<script>
+<% web_flag() %>
+
+var thank_login;
+
+if( router_type == "RangeMax(TM)" )
+{
+	thank_login = "$thank_login_info_RangeMax";
+}
+else
+{
+	thank_login = "$thank_login_info";
+}
+
+function enableFwCheck()
+{
+	var cf = document.forms[0];
+	if (cf.enable.checked)
+		cf.firstTime.value="1";
+	else
+		cf.firstTime.value="0";
+	cf.submit();
+}
+
+function loadvalue()
+{
+	var cf = document.forms[0];
+	var thank_for = '<% cfg_get("thank_login") %>';
+	if(thank_for == '0')
+		cf.enable.checked=false;
+	else
+		cf.enable.checked=true;
+}
+</script>
+<LINK rel="stylesheet" href="style/form.css">
+<INPUT type="hidden" name="firstTime" value="0">
+<TABLE cellspacing=5 cellPadding=0 width=100% border=0>
+$bluebar
+<TR><TD><span><P><script>document.write(thank_login)</script></P></span></TD></TR>
+<TR><TD align="center"><img src="/logo.jpg"></TD></TR>
+<TR>
+	<TD nowrap>
+	<input type="checkbox" name="enable" tabindex="1"  onclick="enableFwCheck();">$auto_upg_not_display
+	</TD>
+</TR>
+$bluebar
+<TR>
+	<TD nowrap colspan=2 align=center>
+	<input class="delete_bt" type=button name="close" value="$close_win_mark" onClick="self.close()">
+	</TD>
+</TR>
+</TABLE>
+<script>loadvalue()</script>
+</FORM>
+</BODY>
+</HTML>

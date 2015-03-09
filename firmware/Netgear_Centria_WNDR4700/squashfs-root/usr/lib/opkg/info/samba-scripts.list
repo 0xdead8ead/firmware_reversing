@@ -1,0 +1,16 @@
+/usr/sbin/update_user
+/usr/config/group
+/usr/sbin/detectSATA
+/etc/shadow
+/etc/init.d/samba
+/usr/sbin/update_smb
+/usr/config/passwd
+/etc/passwd+
+/home
+/usr/lib/smb.conf
+/usr/config/smb.conf
+/etc/group
+/etc/gshadow
+/etc/samba
+/usr/private
+/etc/passwd

@@ -1,0 +1,16 @@
+<% http_header() %>
+<% nohelp_header("detect_have_simcard_wait.htm", "succ_conn_hsdpa") %>
+
+<script>
+var sim_card_flag="<% cfg_get("wan_sim_card") %>";
+function loadvalue()
+{
+	if(sim_card_flag == '1')
+		document.forms[0].submit();
+	else
+		location.href="detect_no_simcard.htm";
+}
+	
+</script>
+</form></body>
+</HTML>

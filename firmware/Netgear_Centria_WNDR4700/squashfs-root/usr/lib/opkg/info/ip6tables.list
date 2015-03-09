@@ -1,0 +1,14 @@
+/usr/lib/iptables/libip6t_hbh.so
+/usr/lib/iptables/libip6t_mh.so
+/usr/lib/iptables/libip6t_LOG.so
+/usr/lib/iptables/libip6t_REJECT.so
+/usr/lib/iptables/libip6t_ipv6header.so
+/usr/sbin/ip6tables
+/usr/lib/iptables/libip6t_icmp6.so
+/usr/lib/iptables/libip6t_frag.so
+/usr/lib/iptables/libip6t_ah.so
+/usr/lib/iptables/libip6t_dst.so
+/usr/lib/iptables/libip6t_HL.so
+/usr/lib/iptables/libip6t_hl.so
+/usr/lib/iptables/libip6t_rt.so
+/usr/lib/iptables/libip6t_eui64.so

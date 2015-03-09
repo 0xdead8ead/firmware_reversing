@@ -1,0 +1,38 @@
+#!/bin/sh
+
+. /etc/net6conf/6data.conf
+outfile=/tmp/ipv6_auto_output
+BASEDIR="/etc/net6conf"
+
+start()
+{
+	/sbin/detwanv6 ${WAN} ${outfile} &
+	sleep 7	# sleep 7 seconds
+	case `cat ${outfile}` in
+		"6to4 Tunnel")
+			${BASEDIR}/6to4 start
+		;;
+		"DHCP")
+			${BASEDIR}/6dhcpc start
+		;;
+		"Auto Config")
+			${BASEDIR}/6autoconf start
+		;;
+		"Pass Through")
+			${BASEDIR}/6bridge start
+		;;
+		*)
+		;;
+	esac
+}
+
+case "$1" in
+	"start")
+		start
+	;;
+	"stop")
+	;;
+	"restart")
+		start
+	;;
+esac

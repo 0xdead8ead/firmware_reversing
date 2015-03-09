@@ -1,0 +1,28 @@
+#!/bin/sh /etc/rc.common
+START=15
+
+read_mac_addr_wpspin() {
+    # artmtd got them
+    cat /tmp/lan_mac > /tmp/mac_addr_2g
+    cat /tmp/wlan5g_mac > /tmp/mac_addr_5g
+    /sbin/artmtd -r wpspin
+}
+
+boot() {
+        # prepare anything needed by update-wifi and Atheros scripts.
+	SBIN_TMP=/tmp/sbin
+	ATH_TMP=/tmp/etc/ath
+	ATH_ORI=/etc/ath.orig
+	WPA2_TMP=/tmp/etc/wpa2
+	WPA2_ORI=/etc/wpa2.orig
+	TOPOLOGY_FILE_TMP=/tmp/topology.conf
+	TOPOLOGY_FILE=/var/run/topology.conf
+	
+	[ -d $SBIN_TMP ] || mkdir -p $SBIN_TMP;
+	[ -d $ATH_TMP ] || mkdir -p $ATH_TMP && cp -a $ATH_ORI/* $ATH_TMP;
+	[ -d $WPA2_TMP ] || mkdir -p $WPA2_TMP && cp -a $WPA2_ORI/* $WPA2_TMP;
+	[ -h $TOPOLOGY_FILE ] || ln -s $TOPOLOGY_FILE_TMP $TOPOLOGY_FILE
+        read_mac_addr_wpspin
+        /bin/config set wps_lock_down=0
+        /bin/config set wps_pin_history_failures=0
+}

@@ -1,0 +1,13 @@
+Package: ip6tables-utils
+Version: 1.4.4-2
+Depends: ip6tables
+Provides: 
+Source: package/iptables
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 80064
+Description:  ip6tables save and restore utilities

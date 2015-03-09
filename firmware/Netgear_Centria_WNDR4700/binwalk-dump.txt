@@ -1,0 +1,11 @@
+
+DECIMAL   	HEX       	DESCRIPTION
+-------------------------------------------------------------------------------------------------------------------
+128       	0x80      	uImage header, header size: 64 bytes, header CRC: 0xCFDF8A93, created: Mon May  6 07:46:07 2013, image size: 11722 bytes, Data Address: 0x0, Entry Point: 0x0, data CRC: 0x503160ED, OS: Linux, CPU: PowerPC, image type: OS Kernel Image, compression type: lzma, image name: "PowerPC OpenWrt Linux-2.6.32"
+707       	0x2C3     	LZMA compressed data, properties: 0xB5, dictionary size: 8388608 bytes, uncompressed size: 50331648 bytes
+5136      	0x1410    	U-Boot boot loader reference
+131200    	0x20080   	uImage header, header size: 64 bytes, header CRC: 0x7F71D6C1, created: Mon May  6 07:46:11 2013, image size: 1870601 bytes, Data Address: 0x0, Entry Point: 0x0, data CRC: 0xCFCE75C, OS: Linux, CPU: PowerPC, image type: OS Kernel Image, compression type: lzma, image name: "PowerPC OpenWrt Linux-2.6.32"
+131264    	0x200C0   	LZMA compressed data, properties: 0x6D, dictionary size: 8388608 bytes, uncompressed size: 5849344 bytes
+2097216   	0x200040  	uImage header, header size: 64 bytes, header CRC: 0x208E2A6B, created: Mon May  6 07:46:11 2013, image size: 13959172 bytes, Data Address: 0x0, Entry Point: 0x0, data CRC: 0xCA6FAA2D, OS: Linux, CPU: PowerPC, image type: OS Kernel Image, compression type: lzma, image name: "PowerPC OpenWrt Linux-2.6.32"
+2097280   	0x200080  	Squashfs filesystem, little endian, version 4.0, compression:lzma, size: 13829320 bytes,  1957 inodes, blocksize: 131072 bytes, created: Mon May  6 07:46:07 2013 
+

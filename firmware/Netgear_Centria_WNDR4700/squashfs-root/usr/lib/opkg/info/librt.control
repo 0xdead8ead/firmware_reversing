@@ -1,0 +1,13 @@
+Package: librt
+Version: 2.13-61
+Depends: 
+Provides: 
+Source: package/base-files
+Section: libs
+Status: unknown hold not-installed
+Essential: yes
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 47269
+Description:  POSIX.1b RealTime extension library

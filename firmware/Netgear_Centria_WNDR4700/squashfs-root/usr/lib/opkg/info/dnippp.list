@@ -1,0 +1,6 @@
+/usr/sbin/pppd
+/etc/modules.d/60-pptp-mod
+/etc/modules.d/60-pppoe-mod
+/lib/network/ppp.sh
+/etc/ppp
+/etc/modules.d/60-l2tp-mod

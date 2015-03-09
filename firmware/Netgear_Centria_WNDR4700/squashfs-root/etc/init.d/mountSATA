@@ -1,0 +1,29 @@
+#!/bin/sh /etc/rc.common
+START=90
+
+start(){
+	cat /proc/partitions | grep "sd" | awk '{print $4}' > /tmp/storage_device_info
+	if [ $? == 0 ]; then
+		count=0
+		while read LINE
+		do
+			hdparm -i /dev/$LINE | grep Model > /dev/null 
+			if [ $? == 0 -a `length $LINE` == '4' ]; then		
+				/sbin/hotplug2.mount $LINE
+				mount | grep "$LINE" > /dev/null
+				if [ $? == 0 ]; then
+					count=`expr $count + 1`
+					/bin/config set sata_partition$count=$LINE
+				fi
+				/bin/config set sata_partition_status=1 
+			fi
+		done < /tmp/storage_device_info
+		
+		[ "$count" != "0" ] && $CONFIG set sata_partition_count=$count && $CONFIG commit
+			
+		rm /tmp/storage_device_info
+		killall check_HDD_capacity
+		sleep 1
+		/sbin/check_HDD_capacity &
+	fi
+}

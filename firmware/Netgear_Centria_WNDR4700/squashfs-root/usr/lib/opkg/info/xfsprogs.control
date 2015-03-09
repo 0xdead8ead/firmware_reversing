@@ -1,0 +1,13 @@
+Package: xfsprogs
+Version: 3.1.6
+Depends: libuuid
+Provides: 
+Source: package/xfsprogs
+Section: utils
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 292980
+Description:  configure and build the open source XFS utilites

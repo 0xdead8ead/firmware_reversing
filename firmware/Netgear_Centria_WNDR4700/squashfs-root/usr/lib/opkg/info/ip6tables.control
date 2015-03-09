@@ -1,0 +1,13 @@
+Package: ip6tables
+Version: 1.4.4-2
+Depends: kmod-ip6tables
+Provides: 
+Source: package/iptables
+Section: net
+Status: unknown ok not-installed
+Essential: no
+Priority: optional
+Maintainer: OpenWrt Developers Team <openwrt-devel@openwrt.org>
+Architecture: wndr4700
+Installed-Size: 141236
+Description:  IPv6 firewall administration tool
